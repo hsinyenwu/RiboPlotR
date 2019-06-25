@@ -3,6 +3,7 @@
 export(PLOTc)
 export(PLOTc2)
 export(PLOTt)
+export(PLOTt2)
 export(gene.structure)
 export(rna_bam.ribo)
 export(uorf.structure)

@@ -4,9 +4,9 @@
 \alias{rna_bam.ribo}
 \title{Function to get bam file path, ribo-seq p-site information and axis labels information.}
 \usage{
-rna_bam.ribo(rna1, ribo1, rna2 = NULL, ribo2 = NULL,
-  RNAlab1 = "RNA_sample1", RNAlab2 = "RNA_sample2",
-  Ribolab1 = "Ribo_sample1", Ribolab2 = "Ribo_sample2")
+rna_bam.ribo(rna1, ribo1, rna2, ribo2, RNAlab1 = "RNA_sample1",
+  RNAlab2 = "RNA_sample2", Ribolab1 = "Ribo_sample1",
+  Ribolab2 = "Ribo_sample2")
 }
 \arguments{
 \item{rna1}{The first RNA-seq bam file path.}

@@ -5,12 +5,12 @@
 \title{PLOTt, plot RNA-seq and ribo-seq separately.}
 \usage{
 PLOTt(YFG, data1 = RNAseqBam1, CDSonly = FALSE, Extend = 0, isoform,
-  uORF = NULL, NAME)
+  uORF = NULL, NAME = "")
 }
 \arguments{
 \item{YFG}{Gene ID}
 
-\item{data1}{Data to plot. Default is RNAseqBam1 that was loaded by rna_bam.ribo.}
+\item{data1}{Dataset 1 to plot. Default is RNAseqBam1 that was loaded by rna_bam.ribo.}
 
 \item{CDSonly}{TRUE or FALSE. Only plot CDS region or all riboseq reads in defined area. Default plot all riboseq reads in the defined area.}
 
