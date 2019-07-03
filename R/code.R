@@ -81,15 +81,16 @@ uorf.structure <- function(uorf_annotation,format="gtf",dataSource="",organism="
 #' @param RNAlab2 The y-axis label for the second RNA-seq datasets.
 #' @param Ribolab1 The y-axis label for the first ribo-seq datasets.
 #' @param Ribolab2 The y-axis label for the second ribo-seq datasets.
-#'
+#' @param S_NAME1 Sample 1 name
+#' @param S_NAME2 Sample 2 name
+#' @param RNAbackground The background color for RNA-seq results
 #' @return Assign pathes or tsv files to global environment required for downstream analysis
 #' @export
-#'
 #' @examples
 #' \dontrun{
 #' uorf.structure(uorf_annotation="/Volumes/BACKUP/project2/TAIR10.29.gtf",dataSource="Araport",organism="Arabidopsis thaliana")
 #' }
-rna_bam.ribo <- function(rna1,ribo1,rna2,ribo2,RNAlab1="RNA_sample1",RNAlab2="RNA_sample2",Ribolab1="Ribo_sample1",Ribolab2="Ribo_sample2"){
+rna_bam.ribo <- function(rna1,ribo1,rna2,ribo2,RNAlab1="RNA_sample1",RNAlab2="RNA_sample2",Ribolab1="Ribo_sample1",Ribolab2="Ribo_sample2",S_NAME1="sample1",S_NAME2="sample2",RNAbackground="#FEFEAE"){
   #get path to RNASeq Bam file
   RNAseqBam1 <- rna1
   RNAseqBam2 <- rna2
@@ -106,6 +107,9 @@ rna_bam.ribo <- function(rna1,ribo1,rna2,ribo2,RNAlab1="RNA_sample1",RNAlab2="RN
   assign("RNAlab2", RNAlab2, envir = .GlobalEnv)
   assign("Ribolab1", Ribolab1, envir = .GlobalEnv)
   assign("Ribolab2", Ribolab2, envir = .GlobalEnv)
+  assign("S_NAME1", S_NAME1, envir = .GlobalEnv)
+  assign("S_NAME2", S_NAME2, envir = .GlobalEnv)
+  assign("RNAbackground", RNAbackground, envir = .GlobalEnv)
 }
 
 
@@ -126,11 +130,12 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR,ybottom = 0,main = deparse
     height <- 0.1
     xlim=ranges(unlist(exonsByTx[isoform]))
     xlimCds=ranges(unlist(cdsByTx[isoform]))
-
+    
     # plot 5'UTR
     if (isoform %in% names(fiveUTR)) {
       xlim5=ranges(unlist(fiveUTR[isoform]))
       rect(start(xlim5), ybottom, end(xlim5), ybottom + height, col = col5, border = "black")
+      # text(x=xlim5,y=ybottom,labels=isoform)
     }
     # plot lines between exons to represent introns
     if (length(unlist(exonsByTx[isoform]))>1) {
@@ -152,13 +157,13 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR,ybottom = 0,main = deparse
     rect(start(xlimCds), ybottom, end(xlimCds), ybottom + height, col =c("black","black","black")[Frame] , border = "black")
     if (!is.null(uORF)) {
       #The next if check if the isoform contains the range of the uORF, if not, do not plot the uORF in the gene model.
-      if(sum(width(setdiff(cdsByTx_u[paste0(uORF,".1")],exonsByTx[isoform])))==0) {
+      if(sum(width(GenomicRanges::setdiff(unlist(cdsByTx_u[paste0(uORF,".1")]),unlist(exonsByTx[isoform]))))==0) {
         uORF=paste0(uORF,".1")
         xlim_uORF=ranges(unlist(cdsByTx_u[uORF]))
         rect(start(xlim_uORF), ybottom, end(xlim_uORF), ybottom + height, col ="yellow" , border = "black")
       }
     }
-    # print(isoform %in% names(threeUTR))
+
     ########################
     # Plot 3'UTR with an arrow shap
     if (isoform %in% names(threeUTR)) {
@@ -194,7 +199,8 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR,ybottom = 0,main = deparse
   else {
     stop("Input transcript is not a coding gene in gtf/gff file.")
   }
-} 
+}
+
 
 #
 #' @title Identify highest value of riboseq reads in a give gene.
@@ -247,6 +253,42 @@ p_site_Y_max <- function(GeneName,isoform,ribo,CDSonly=FALSE,Extend=Extend) {
   }
   else {
     stop("Input transcript is not a coding gene in gtf/gff file.")
+  }
+}
+
+#plotGeneModel combines both plotRanges and p_site_plot_all functions
+
+#' @title plot plotGeneModel
+#' @description plotGeneModel combines both plotRanges and p_site_plot_all functions
+#' @param gene gene ID
+#' @param uORF uORF ID
+#' @param Extend number of nucleotides to extend on both side of the gene model
+#' @return plot the gene model
+
+plotGeneModel <- function(gene,uORF,Extend=Extend){
+  isoforms <- length(unlist(txByGene[gene]))
+  generanges <- ranges(unlist(exonsByGene[gene]))
+  SUW <- sum(width(generanges))
+  xlimg= min(start(generanges))-0.05
+  # genelim <- c(min(start(generanges)), max(end(generanges)))
+  genelim <- c(min(start(generanges))-Extend, max(end(generanges))+Extend)
+  isoforms.w.3UTR <- unlist(txByGene[gene])$tx_name[which(unlist(txByGene[gene])$tx_name %in% names(threeUTR))]
+  plot.new()
+  yAxis <- (isoforms*0.3+0.1)
+  plot.window(genelim,c(0,yAxis))
+  tx_num <- substr(unlist(txByGene[gene])$tx_name,11,nchar(unlist(txByGene[gene])$tx_name))
+  for (i in unlist(txByGene[gene])$tx_name) {
+    w <- which(unlist(txByGene[gene])$tx_name==i)
+    if (i %in% names(threeUTR)) {
+      shortest3UTR <- min(sapply(isoforms.w.3UTR, function(j) width(tail(unlist(threeUTR[j]),1))))
+      plotRanges(isoform=i,uORF,shortest3UTR,ybottom=(yAxis-0.28*w)) #removed
+      text(x=min(start(generanges))-Extend-SUW/64, y=(yAxis-0.28*w+0.05), labels=tx_num[w],cex=1.2)
+    }
+    else {
+      plotRanges(isoform=i,uORF,ybottom=(yAxis-0.3*w))
+      # was yAxis-0.28*w+0.05
+      text(x=min(start(generanges))-Extend-SUW/64, y=(yAxis-0.28*w+0.05), labels=tx_num[w],cex=1.2)
+    }
   }
 }
 
@@ -399,36 +441,6 @@ p_site_plot_p2 <- function(gene,uORF,uORF.isoform=1,ribo,CDSonly=TRUE,Extend=Ext
   }
 }
 
-#plotGeneModel combines both plotRanges and p_site_plot_all functions
-
-#' @title plot plotGeneModel
-#' @description plotGeneModel combines both plotRanges and p_site_plot_all functions
-#' @param gene gene ID
-#' @param uORF uORF ID
-#' @param Extend number of nucleotides to extend on both side of the gene model
-#' @return plot the gene model
-
-plotGeneModel <- function(gene,uORF,Extend=Extend){
-  isoforms <- length(unlist(txByGene[gene]))
-  generanges <- ranges(unlist(exonsByGene[gene]))
-  # genelim <- c(min(start(generanges)), max(end(generanges)))
-  genelim <- c(min(start(generanges))-Extend, max(end(generanges))+Extend)
-  isoforms.w.3UTR <- unlist(txByGene[gene])$tx_name[which(unlist(txByGene[gene])$tx_name %in% names(threeUTR))]
-  plot.new()
-  yAxis <- (isoforms*0.3+0.1)
-  plot.window(genelim,c(0,yAxis))
-  for (i in unlist(txByGene[gene])$tx_name) {
-    w <- which(unlist(txByGene[gene])$tx_name==i)
-    if (i %in% names(threeUTR)) {
-      shortest3UTR <- min(sapply(isoforms.w.3UTR, function(j) width(tail(unlist(threeUTR[j]),1))))
-      plotRanges(isoform=i,uORF,shortest3UTR,ybottom=(yAxis-0.28*w)) #removed
-    }
-    else {
-      plotRanges(isoform=i,uORF,ybottom=(yAxis-0.3*w))
-    }
-  }
-}
-
 #firstInFramePSitePerExonPositive finds out the frame information with respect to isoform CDS start site when gene is on + strand
 #' @title firstInFramePSitePerExonPositive
 #' @description if the reads are on the positive strand first in frame P-site per exon
@@ -472,11 +484,13 @@ firstInFramePSitePerExonNegative <- function(x){
   return(dfs3$frame)
 }
 
-#
 #' @title PLOTt, plot RNA-seq and ribo-seq separately.
 #' @description Plot both RNA-seq and ribo-seq in two plots with a gene model.
 #' @param YFG Gene ID
-#' @param data1 Dataset 1 to plot. Default is RNAseqBam1 that was loaded by rna_bam.ribo.
+#' @param RNAbam1 Dataset 1 to plot. Default is RNAseqBam1 that was loaded by rna_bam.ribo.
+#' @param ribo1 riboseq dataset
+#' @param ylab1 name of Y-axis
+#' @param SAMPLE1 name of sample 1
 #' @param CDSonly TRUE or FALSE. Only plot CDS region or all riboseq reads in defined area. Default plot all riboseq reads in the defined area.
 #' @param Extend Integer. The number of extra nt ploted at the ends of the plots. 
 #' @param isoform Integer. Which isoform to plot periodicity.
@@ -486,7 +500,7 @@ firstInFramePSitePerExonNegative <- function(x){
 #' @export
 #'
 # No @examples
-PLOTt <-function(YFG,data1=RNAseqBam1,CDSonly=FALSE,Extend=0,isoform,uORF=NULL,NAME="") {
+PLOTt <-function(YFG,RNAbam1=RNAseqBam1,ribo1=riboR1,ylab1=Ribolab1,SAMPLE1=S_NAME1,CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="") {
   transcript_id <- unlist(txByGene[YFG])$tx_name
   #Do not set first transcript because some genes do not have isoform 1
   suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,11))[1])
@@ -500,33 +514,29 @@ PLOTt <-function(YFG,data1=RNAseqBam1,CDSonly=FALSE,Extend=0,isoform,uORF=NULL,N
   SZ <- GenomicRanges::reduce(unlist(txByGene[YFG]))
   which1 <- resize(SZ,width=width(SZ)+Extend,fix = "end")
   which1 <- resize(which1,width=width(which1)+Extend,fix = "start")
-
-  # # Here determine anti-sense strand
-  # if(as.character(strand(GR))=="+"){AntiSenseStrand <- "-"}
-  # else if (as.character(strand(GR))=="-") {AntiSenseStrand <- "+"}
-  # else{print("strand info missing")}
-
   what1 <- c("rname", "strand", "pos", "qwidth","seq")
   param <- ScanBamParam(which = which1, what = what1)
   #Layout
   isoforms <- length(unlist(txByGene[YFG]))
   layout(matrix(c(1,1,2,2,3,3),3,2,byrow=TRUE), widths=c(6,6,6), heights=c(2,2,0.5*isoforms))
-  readPairs2 <- readGAlignmentPairs(data1, param=param,strandMode = 2)
+  readPairs2 <- readGAlignmentPairs(RNAbam1, param=param,strandMode = 2)
   readPairs2 <- readPairs2[strand(readPairs2)==as.character(strand(GR))]
   cvg2 <- coverage(readPairs2)
   Gtx2 <- as.numeric(cvg2[[chr]][ranges(GR)])
-  max_Y <- max(max(Gtx2))
-  max_P <- max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo=riboR1,Extend=Extend))
-  plot(Gtx2,type="h",col="aliceblue",lwd=1,xaxt='n',ylim=c(0,max_Y+2))
+  max_Y <- max(Gtx2)
+  max_P <- max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend))
+  plot(Gtx2,type="h",col=RNAbackground,lwd=1,xaxt='n',ylim=c(0,max_Y+2))
+  mtext(RNAlab1, side = 2, line = 2.5,cex=1)
   par(new = T)
-  plot(Gtx2,type="l",col="darkgrey",lwd=1,xaxt='n',ylim=c(0,max_Y+2))
+  plot(Gtx2,type="l",col="darkgrey",lwd=1,xaxt='n',ylim=c(0,max_Y+2),yaxt="n",ylab=NULL)
   lines(x=c(1,length(Gtx2)),y=c(0,0),col="white",lwd=2)
-  legend("topleft",legend="Condition_1_RNAseq",bty="n",cex=1.2)
-  p_site_plot_p(YFG,CDSonly=CDSonly,isoform=isoform,ribo=riboR1,Extend=Extend,YLIM=max_P, axesQ="PLOT")
-  par(new = T)
-  if (!is.null(uORF)) {p_site_plot_p2(gene=YFG,uORF=uORF,CDSonly=TRUE,uORF.isoform=1,ribo=riboR1,Extend=Extend,YLIM=max_P)}
-  legend("topleft",legend="Condition_1_Riboseq",bty="n",cex=1.2)
-  mtext(paste('Read counts'), side = 2, outer = T, line = 3.1,cex=0.8)
+  legend("topleft",SAMPLE1,bty="n",cex=1.5,text.font=2)
+  p_site_plot_p(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend,YLIM=max_P, axesQ="PLOT")
+  mtext(Ribolab1, side = 2, line = 2.5,cex=1)
+  if (!is.null(uORF)) {
+    par(new=TRUE)
+    p_site_plot_p2(gene=YFG,uORF=uORF,CDSonly=TRUE,uORF.isoform=1,ribo1,Extend=Extend,YLIM=max_P)
+    }
   #Plot gene model
   plotGeneModel(YFG,Extend=Extend,uORF=uORF)
   mtext(paste(YFG,NAME),side=3,line=0.4, cex=1.2, col="black", outer=TRUE)
@@ -536,8 +546,14 @@ PLOTt <-function(YFG,data1=RNAseqBam1,CDSonly=FALSE,Extend=0,isoform,uORF=NULL,N
 #' @title PLOTt2, plot 2 sets of RNA-seq and ribo-seq for comparison
 #' @description seperately plot 2 sets of RNA-seq and ribo-seq for comparison. It also contains a plot with transcript models.
 #' @param YFG Gene ID
-#' @param data1 Dataset 1 to plot. Default is RNAseqBam1 that was loaded by rna_bam.ribo.
-#' @param data2 Dataset 2 to plot. Default is RNAseqBam2 that was loaded by rna_bam.ribo.
+#' @param RNAbam1 Dataset 1 to plot. Default is RNAseqBam1 that was loaded by rna_bam.ribo.
+#' @param RNAbam2 Dataset 2 to plot. Default is RNAseqBam2 that was loaded by rna_bam.ribo.
+#' @param ribo1 riboseq dataset 1
+#' @param ylab1 name of Y-axis 1
+#' @param ribo2 riboseq dataset 2
+#' @param ylab2 name of Y-axis 2
+#' @param SAMPLE1 name of sample 1
+#' @param SAMPLE2 name of sample 2
 #' @param CDSonly TRUE or FALSE. Only plot CDS region or all riboseq reads in defined area. Default plot all riboseq reads in the defined area.
 #' @param Extend Integer. The number of extra nt ploted at the ends of the plots. 
 #' @param isoform Integer. Which isoform to plot periodicity.
@@ -546,7 +562,7 @@ PLOTt <-function(YFG,data1=RNAseqBam1,CDSonly=FALSE,Extend=0,isoform,uORF=NULL,N
 #' @return 2 plots for RNAseq and Riboseq in 2 different conditions. 
 #' @export
 
-PLOTt2 <-function(YFG,data1=RNAseqBam1,data2=RNAseqBam2,CDSonly=FALSE,Extend=0,isoform,uORF=NULL,NAME="") {
+PLOTt2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=riboR1,ribo2=riboR2,ylab1=Ribolab1,ylab2=Ribolab2,SAMPLE1 = S_NAME1, SAMPLE2 = S_NAME2,CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="") {
   transcript_id <- unlist(txByGene[YFG])$tx_name
   #Do not set first transcript because some genes do not have isoform 1
   suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,11))[1])
@@ -568,42 +584,40 @@ PLOTt2 <-function(YFG,data1=RNAseqBam1,data2=RNAseqBam2,CDSonly=FALSE,Extend=0,i
   #Layout
   isoforms <- length(unlist(txByGene[YFG]))
   layout(matrix(c(1,1,2,2,3,3,4,4,5,5),5,2,byrow=TRUE), widths=c(6,6,6,6,6), heights=c(1.5,1.5,1.5,1.5,0.35*isoforms))
-  readPairs1 <- readGAlignmentPairs(data1, param=param,strandMode = 2)
+  readPairs1 <- readGAlignmentPairs(RNAbam1, param=param,strandMode = 2)
   readPairs1 <- readPairs1[strand(readPairs1)==as.character(strand(GR))]
   cvg1 <- coverage(readPairs1)
   Gtx1 <- as.numeric(cvg1[[chr]][ranges(GR)])
   
-  readPairs2 <- readGAlignmentPairs(data2, param=param,strandMode = 2)
+  readPairs2 <- readGAlignmentPairs(RNAbam2, param=param,strandMode = 2)
   readPairs2 <- readPairs2[strand(readPairs2)==as.character(strand(GR))]
   cvg2 <- coverage(readPairs2)
   Gtx2 <- as.numeric(cvg2[[chr]][ranges(GR)])
   
   max_Y <- max(max(Gtx1),max(Gtx2))
-  max_P <- max(max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo=riboR1,Extend=Extend)),
-               max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo=riboR2,Extend=Extend)))
-  
-  plot(Gtx1,type="h",col="aliceblue",lwd=1,xaxt='n',ylim=c(0,max_Y+2))
+  max_P <- max(max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend)),
+               max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo2,Extend=Extend)))
+  plot(Gtx1,type="h",col=RNAbackground,lwd=1,xaxt='n',ylim=c(0,max_Y+2))
   par(new = T)
-  plot(Gtx1,type="l",col="darkgrey",lwd=1,xaxt='n',ylim=c(0,max_Y+2))
+  plot(Gtx1,type="l",col="darkgrey",lwd=1,xaxt='n',ylim=c(0,max_Y+2),yaxt="n",ylab=NULL)
   lines(x=c(1,length(Gtx1)),y=c(0,0),col="white",lwd=2)
-  legend("topleft",legend=RNAlab1,bty="n",cex=1.2)
-  p_site_plot_p(YFG,CDSonly=CDSonly,isoform=isoform,ribo=riboR1,Extend=Extend,YLIM=max_P, axesQ="PLOT")
+  legend("topright",legend=RNAlab1,bty="n",cex=1.2)
+  legend("topleft",legend=SAMPLE1,bty="n",cex=1.2,text.font = 2)
+  p_site_plot_p(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend,YLIM=max_P, axesQ="PLOT")
   par(new = T)
-  if (!is.null(uORF)) {p_site_plot_p2(gene=YFG,uORF=uORF,CDSonly=TRUE,uORF.isoform=1,ribo=riboR1,Extend=Extend,YLIM=max_P)}
-  legend("topleft",legend=Ribolab1,bty="n",cex=1.2)
-  mtext(paste('Read counts'), side = 2, outer = T, line = 3.1,cex=0.8)  
+  if (!is.null(uORF)) {p_site_plot_p2(gene=YFG,uORF=uORF,CDSonly=TRUE,uORF.isoform=1,ribo1,Extend=Extend,YLIM=max_P)}
+  legend("topright",legend=Ribolab1,bty="n",cex=1.2)
   
-  plot(Gtx2,type="h",col="aliceblue",lwd=1,xaxt='n',ylim=c(0,max_Y+2))
+  plot(Gtx2,type="h",col=RNAbackground,lwd=1,xaxt='n',ylim=c(0,max_Y+2))
   par(new = T)
-  plot(Gtx2,type="l",col="darkgrey",lwd=1,xaxt='n',ylim=c(0,max_Y+2))
+  plot(Gtx2,type="l",col="darkgrey",lwd=1,xaxt='n',ylim=c(0,max_Y+2),yaxt="n",ylab=NULL)
   lines(x=c(1,length(Gtx2)),y=c(0,0),col="white",lwd=2)
-  legend("topleft",legend=RNAlab2,bty="n",cex=1.2)
-  p_site_plot_p(YFG,CDSonly=CDSonly,isoform=isoform,ribo=riboR2,Extend=Extend,YLIM=max_P, axesQ="PLOT")
+  legend("topright",legend=RNAlab2,bty="n",cex=1.2)
+  legend("topleft",legend=SAMPLE2,bty="n",cex=1.2, text.font = 2)
+  p_site_plot_p(YFG,CDSonly=CDSonly,isoform=isoform,ribo2,Extend=Extend,YLIM=max_P, axesQ="PLOT")
   par(new = T)
-  if (!is.null(uORF)) {p_site_plot_p2(gene=YFG,uORF=uORF,CDSonly=TRUE,uORF.isoform=1,ribo=riboR2,Extend=Extend,YLIM=max_P)}
-  legend("topleft",legend=Ribolab2,bty="n",cex=1.2)
-  mtext(paste('Read counts'), side = 2, outer = T, line = 3.1,cex=0.8)
-  
+  if (!is.null(uORF)) {p_site_plot_p2(gene=YFG,uORF=uORF,CDSonly=TRUE,uORF.isoform=1,ribo2,Extend=Extend,YLIM=max_P)}
+  legend("topright",legend=Ribolab1,bty="n",cex=1.2)
   #Plot gene model
   plotGeneModel(YFG,Extend=Extend,uORF=uORF)
   mtext(paste(YFG,NAME),side=3,line=0.4, cex=1.2, col="black", outer=TRUE)
@@ -613,7 +627,9 @@ PLOTt2 <-function(YFG,data1=RNAseqBam1,data2=RNAseqBam2,CDSonly=FALSE,Extend=0,i
 #' @description PLOTc plot RNA-seq and ribo-seq together for one datasets. It also contains a plot with transcript models.
 #' 
 #' @param YFG Gene ID
-#' @param data1 Dataset 1 to plot. Default is RNAseqBam1 that was loaded by rna_bam.ribo.
+#' @param RNAbam1 Dataset 1 to plot. Default is RNAseqBam1 that was loaded by rna_bam.ribo.
+#' @param ribo1 riboseq dataset
+#' @param SAMPLE1 name of sample 1
 #' @param CDSonly TRUE or FALSE. Only plot CDS region or all riboseq reads in defined area. Default plot all riboseq reads in the defined area.
 #' @param Extend Integer. The number of extra nt ploted at the ends of the plots. 
 #' @param isoform Integer. Which isoform to plot periodicity.
@@ -622,7 +638,7 @@ PLOTt2 <-function(YFG,data1=RNAseqBam1,data2=RNAseqBam2,CDSonly=FALSE,Extend=0,i
 #' @return Both RNAseq and Riboseq plot together for one set of data
 #' @export
 
-PLOTc <-function(YFG,data1=RNAseqBam1,CDSonly=FALSE,Extend=0,isoform,uORF=NULL,NAME="") {
+PLOTc <-function(YFG,RNAbam1=RNAseqBam1,ribo1=riboR1,ylab1=Ribolab1,SAMPLE1 = S_NAME1,CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="") {
   transcript_id <- unlist(txByGene[YFG])$tx_name
   #Do not set first transcript because some genes do not have isoform 1
   suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,11))[1])
@@ -636,35 +652,29 @@ PLOTc <-function(YFG,data1=RNAseqBam1,CDSonly=FALSE,Extend=0,isoform,uORF=NULL,N
   SZ <- GenomicRanges::reduce(unlist(txByGene[YFG]))
   which1 <- resize(SZ,width=width(SZ)+Extend,fix = "end")
   which1 <- resize(which1,width=width(which1)+Extend,fix = "start")
-
-  # Here determine anti-sense strand
-  if(as.character(strand(GR))=="+"){AntiSenseStrand <- "-"}
-  else if (as.character(strand(GR))=="-") {AntiSenseStrand <- "+"}
-  else{print("strand info missing")}
-
   what1 <- c("rname", "strand", "pos", "qwidth","seq")
   param <- ScanBamParam(which = which1, what = what1)
   #Layout
   isoforms <- length(unlist(txByGene[YFG]))
   layout(matrix(c(1,1,2,2),2,2,byrow=TRUE), widths=c(6,6), heights=c(2.5,0.45*isoforms))
-
-  readPairs <- readGAlignmentPairs(data1, param=param,strandMode = 2)
+  readPairs <- readGAlignmentPairs(RNAbam1, param=param,strandMode = 2)
   readPairs <- readPairs[strand(readPairs)==as.character(strand(GR))]
   cvg <- coverage(readPairs)
   Gtx <- as.numeric(cvg[[chr]][ranges(GR)])
-  max_Y <- max(max(Gtx))
-  max_P <- max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo=riboR1,Extend=Extend))
-  plot(Gtx,type="h",col="aliceblue",lwd=1,xaxt='n',ylim=c(0,max_Y+2))
+  max_Y <- max(Gtx)
+  max_P <- max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend))
+  plot(Gtx,type="h",col=RNAbackground,lwd=1,xaxt='n',ylim=c(0,max_Y+2))
   par(new = T)
   plot(Gtx,type="l",col="darkgrey",lwd=1,xaxt='n',ylim=c(0,max_Y+2))
   lines(x=c(1,length(Gtx)),y=c(0,0),col="white",lwd=2)
+  legend("topleft",SAMPLE1,bty="n",cex=1.2,text.font=2)
   par(new = T)
-  p_site_plot_p(YFG,CDSonly=CDSonly,isoform=isoform,ribo=riboR1,Extend=Extend,YLIM=max_P, axesQ="PLOTc")
+  p_site_plot_p(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend,YLIM=max_P, axesQ="PLOTc")
   par(new=TRUE)
-  if (!is.null(uORF)) {p_site_plot_p2(gene=YFG,uORF=uORF,CDSonly=TRUE,uORF.isoform=1,ribo=riboR1,Extend=Extend,YLIM=max_P)}
+  if (!is.null(uORF)) {p_site_plot_p2(gene=YFG,uORF=uORF,CDSonly=TRUE,uORF.isoform=1,ribo1,Extend=Extend,YLIM=max_P)}
   axis(side = 4)
-  mtext(side = 4, line = 3, 'Condition_1_Riboseq Counts')
-  mtext(paste('Condition_1_RNAseq ounts'), side = 2, line = 3)
+  mtext(RNAlab1, side = 2, line = 2)
+  mtext(Ribolab1, side = 4, line = 2)
   #Plot gene model
   plotGeneModel(YFG,Extend=Extend,uORF=uORF)
   mtext(paste(YFG,NAME),side=3,line=0.4, cex=1.2, col="black", outer=TRUE)
@@ -673,19 +683,22 @@ PLOTc <-function(YFG,data1=RNAseqBam1,CDSonly=FALSE,Extend=0,isoform,uORF=NULL,N
 #PLOTc2, plot 2 sets of RNA-seq and ribo-seq for comparison. It also contains a plot with transcript models.
 #' @title PLOTc2
 #' @description plot 2 sets of RNA-seq and ribo-seq for comparison. It also contains a plot with transcript models.
-
 #' @param YFG Gene ID
-#' @param data1 Dataset 1 to plot. Default is RNAseqBam1 that was loaded by rna_bam.ribo.
-#' @param data2 Dataset 2 to plot. Default is RNAseqBam2 that was loaded by rna_bam.ribo.
+#' @param RNAbam1 Dataset 1 to plot. Default is RNAseqBam1 that was loaded by rna_bam.ribo.
+#' @param RNAbam2 Dataset 2 to plot. Default is RNAseqBam2 that was loaded by rna_bam.ribo.
+#' @param ribo1 riboseq dataset 1
+#' @param ribo2 riboseq dataset 2
+#' @param SAMPLE1 name of sample 1
+#' @param SAMPLE2 name of sample 2
 #' @param CDSonly TRUE or FALSE. Only plot CDS region or all riboseq reads in defined area. Default plot all riboseq reads in the defined area.
 #' @param Extend Integer. The number of extra nt ploted at the ends of the plots. 
 #' @param isoform Integer. Which isoform to plot periodicity.
 #' @param uORF Gene ID for uORF
 #' @param NAME Name of the gene
-#' @return 2 plots for RNAseq and Riboseq in 2 different conditions. 
+#' @return 2 plots for RNAseq and Riboseq in 2 different genotypes/conditions. 
 #' @export
 
-PLOTc2 <-function(YFG,data1=RNAseqBam1,data2=RNAseqBam2,CDSonly=FALSE,Extend=0,isoform,uORF=NULL,NAME="") {
+PLOTc2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=riboR1,ribo2=riboR2,SAMPLE1 = S_NAME1, SAMPLE2 = S_NAME2, CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="") {
   transcript_id <- unlist(txByGene[YFG])$tx_name
   #Do not set first transcript because some genes do not have isoform 1
   suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,11))[1])
@@ -699,64 +712,48 @@ PLOTc2 <-function(YFG,data1=RNAseqBam1,data2=RNAseqBam2,CDSonly=FALSE,Extend=0,i
   SZ <- GenomicRanges::reduce(unlist(txByGene[YFG]))
   which1 <- resize(SZ,width=width(SZ)+Extend,fix = "end")
   which1 <- resize(which1,width=width(which1)+Extend,fix = "start")
-
-  # Here determine anti-sense strand
-  if(as.character(strand(GR))=="+"){AntiSenseStrand <- "-"}
-  else if (as.character(strand(GR))=="-") {AntiSenseStrand <- "+"}
-  else{print("strand info missing")}
-
   what1 <- c("rname", "strand", "pos", "qwidth","seq")
   param <- ScanBamParam(which = which1, what = what1)
   #Layout
   isoforms <- length(unlist(txByGene[YFG]))
   layout(matrix(c(1,1,2,2,3,3),3,2,byrow=TRUE), widths=c(6,6,6), heights=c(2.5,2.5,0.45*isoforms))
-
-  readPairs1 <- readGAlignmentPairs(data1, param=param,strandMode = 2)
+  readPairs1 <- readGAlignmentPairs(RNAbam1, param=param,strandMode = 2)
   readPairs1 <- readPairs1[strand(readPairs1)==as.character(strand(GR))]
   cvg1 <- coverage(readPairs1)
   Gtx1 <- as.numeric(cvg1[[chr]][ranges(GR)])
-  
-  
-  readPairs2 <- readGAlignmentPairs(data2, param=param,strandMode = 2)
+  readPairs2 <- readGAlignmentPairs(RNAbam2, param=param,strandMode = 2)
   readPairs2 <- readPairs2[strand(readPairs2)==as.character(strand(GR))]
   cvg2 <- coverage(readPairs2)
   Gtx2 <- as.numeric(cvg2[[chr]][ranges(GR)])
-  
   max_Y <- max(max(Gtx1),max(Gtx2))
-  max_P <- max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo=riboR1,Extend=Extend),
-               p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo=riboR2,Extend=Extend))
-  
-  
-  plot(Gtx1,type="h",col="aliceblue",lwd=1,xaxt='n',ylim=c(0,max_Y+2))
+  max_P <- max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend),
+               p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo2,Extend=Extend))
+  plot(Gtx1,type="h",col=RNAbackground,lwd=1,xaxt='n',ylim=c(0,max_Y+2))
   par(new = T)
-  plot(Gtx1,type="l",col="darkgrey",lwd=1,xaxt='n',ylim=c(0,max_Y+2))
+  plot(Gtx1,type="l",col="darkgrey",lwd=1,xaxt='n',ylim=c(0,max_Y+2),yaxt="n",ylab=NULL)
   lines(x=c(1,length(Gtx1)),y=c(0,0),col="white",lwd=2)
+  legend("topleft",legend=SAMPLE1,bty="n",cex=1.2,text.font=2)
   par(new = T)
-  p_site_plot_p(YFG,CDSonly=CDSonly,isoform=isoform,ribo=riboR1,Extend=Extend,YLIM=max_P, axesQ="PLOTc")
+  p_site_plot_p(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend,YLIM=max_P, axesQ="PLOTc")
   par(new=TRUE)
-  if (!is.null(uORF)) {p_site_plot_p2(gene=YFG,uORF=uORF,CDSonly=TRUE,uORF.isoform=1,ribo=riboR1,Extend=Extend,YLIM=max_P)}
+  if (!is.null(uORF)) {p_site_plot_p2(gene=YFG,uORF=uORF,CDSonly=TRUE,uORF.isoform=1,ribo1,Extend=Extend,YLIM=max_P)}
   axis(side = 4)
-  mtext(side = 4, line = 3, Ribolab1)
-  mtext(RNAlab1, side = 2, line = 3)
-
-  plot(Gtx2,type="h",col="aliceblue",lwd=1,xaxt='n',ylim=c(0,max_Y+2))
+  plot(Gtx2,type="h",col=RNAbackground,lwd=1,xaxt='n',ylim=c(0,max_Y+2))
   par(new = T)
-  plot(Gtx2,type="l",col="darkgrey",lwd=1,xaxt='n',ylim=c(0,max_Y+2))
+  plot(Gtx2,type="l",col="darkgrey",lwd=1,xaxt='n',ylim=c(0,max_Y+2),yaxt="n",ylab=NULL)
   lines(x=c(1,length(Gtx2)),y=c(0,0),col="white",lwd=2)
+  legend("topleft",legend=SAMPLE2,bty="n",cex=1.2,text.font=2)
   par(new = T)
-  p_site_plot_p(YFG,CDSonly=CDSonly,isoform=isoform,ribo=riboR2,Extend=Extend,YLIM=max_P, axesQ="PLOTc")
+  p_site_plot_p(YFG,CDSonly=CDSonly,isoform=isoform,ribo2,Extend=Extend,YLIM=max_P, axesQ="PLOTc")
   par(new=TRUE)
-  if (!is.null(uORF)) {p_site_plot_p2(gene=YFG,uORF=uORF,CDSonly=TRUE,uORF.isoform=1,ribo=riboR2,Extend=Extend,YLIM=max_P)}
+  if (!is.null(uORF)) {p_site_plot_p2(gene=YFG,uORF=uORF,CDSonly=TRUE,uORF.isoform=1,ribo2,Extend=Extend,YLIM=max_P)}
   axis(side = 4)
-  mtext(side = 4, line = 3, Ribolab2)
-  mtext(RNAlab2, side = 2, line = 3)
-
+  mtext(Ribolab1, side=4, outer=T, at=0.64,line =2.5,cex=1.2)
+  mtext(RNAlab1, side=2, outer=T, at=0.64,line =2.5,cex=1.2)
   #Plot gene model
   plotGeneModel(YFG,Extend=Extend,uORF=uORF)
   mtext(paste(YFG,NAME),side=3,line=0.4, cex=1.2, col="black", outer=TRUE)
 }
-
-
 
 
 

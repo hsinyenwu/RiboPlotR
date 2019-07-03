@@ -4,15 +4,25 @@
 \alias{PLOTc2}
 \title{PLOTc2}
 \usage{
-PLOTc2(YFG, data1 = RNAseqBam1, data2 = RNAseqBam2, CDSonly = FALSE,
-  Extend = 0, isoform, uORF = NULL, NAME = "")
+PLOTc2(YFG, RNAbam1 = RNAseqBam1, RNAbam2 = RNAseqBam2,
+  ribo1 = riboR1, ribo2 = riboR2, SAMPLE1 = S_NAME1,
+  SAMPLE2 = S_NAME2, CDSonly = FALSE, Extend = 50, isoform,
+  uORF = NULL, NAME = "")
 }
 \arguments{
 \item{YFG}{Gene ID}
 
-\item{data1}{Dataset 1 to plot. Default is RNAseqBam1 that was loaded by rna_bam.ribo.}
+\item{RNAbam1}{Dataset 1 to plot. Default is RNAseqBam1 that was loaded by rna_bam.ribo.}
 
-\item{data2}{Dataset 2 to plot. Default is RNAseqBam2 that was loaded by rna_bam.ribo.}
+\item{RNAbam2}{Dataset 2 to plot. Default is RNAseqBam2 that was loaded by rna_bam.ribo.}
+
+\item{ribo1}{riboseq dataset 1}
+
+\item{ribo2}{riboseq dataset 2}
+
+\item{SAMPLE1}{name of sample 1}
+
+\item{SAMPLE2}{name of sample 2}
 
 \item{CDSonly}{TRUE or FALSE. Only plot CDS region or all riboseq reads in defined area. Default plot all riboseq reads in the defined area.}
 
@@ -25,7 +35,7 @@ PLOTc2(YFG, data1 = RNAseqBam1, data2 = RNAseqBam2, CDSonly = FALSE,
 \item{NAME}{Name of the gene}
 }
 \value{
-2 plots for RNAseq and Riboseq in 2 different conditions.
+2 plots for RNAseq and Riboseq in 2 different genotypes/conditions.
 }
 \description{
 plot 2 sets of RNA-seq and ribo-seq for comparison. It also contains a plot with transcript models.

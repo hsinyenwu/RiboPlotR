@@ -3,9 +3,6 @@ Type: Package
 Title: Plot Periodicity of Ribosome Profiling Data
 Version: 0.1.0
 Author: Larry Wu <larrywu@msu.edu>; Polly Hsu <pollyhsu@msu.edu>
-Authors@R: c(
-    person("Larry", "Wu", email = larrywu@msu.edu", role = c("cre","aut")),
-    person("Polly", "Hsu", email = "pollyhsu@msu.edu", role = "aut"))
 Maintainer: Larry Wu <larrywu@msu.edu>
 Description: Plotting the 3 nucleotide periodicity of the ribosome profiling (Ribo-seq) data together with RNA-seq.
 Depends: R (>= 3.1.0)

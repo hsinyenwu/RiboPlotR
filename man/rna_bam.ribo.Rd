@@ -6,7 +6,8 @@
 \usage{
 rna_bam.ribo(rna1, ribo1, rna2, ribo2, RNAlab1 = "RNA_sample1",
   RNAlab2 = "RNA_sample2", Ribolab1 = "Ribo_sample1",
-  Ribolab2 = "Ribo_sample2")
+  Ribolab2 = "Ribo_sample2", S_NAME1 = "sample1",
+  S_NAME2 = "sample2", RNAbackground = "#FEFEAE")
 }
 \arguments{
 \item{rna1}{The first RNA-seq bam file path.}
@@ -24,6 +25,12 @@ rna_bam.ribo(rna1, ribo1, rna2, ribo2, RNAlab1 = "RNA_sample1",
 \item{Ribolab1}{The y-axis label for the first ribo-seq datasets.}
 
 \item{Ribolab2}{The y-axis label for the second ribo-seq datasets.}
+
+\item{S_NAME1}{Sample 1 name}
+
+\item{S_NAME2}{Sample 2 name}
+
+\item{RNAbackground}{The background color for RNA-seq results}
 }
 \value{
 Assign pathes or tsv files to global environment required for downstream analysis

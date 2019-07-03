@@ -4,13 +4,18 @@
 \alias{PLOTc}
 \title{PLOTc plot RNA-seq and ribo-seq together for one datasets.}
 \usage{
-PLOTc(YFG, data1 = RNAseqBam1, CDSonly = FALSE, Extend = 0, isoform,
+PLOTc(YFG, RNAbam1 = RNAseqBam1, ribo1 = riboR1, ylab1 = Ribolab1,
+  SAMPLE1 = S_NAME1, CDSonly = FALSE, Extend = 50, isoform,
   uORF = NULL, NAME = "")
 }
 \arguments{
 \item{YFG}{Gene ID}
 
-\item{data1}{Dataset 1 to plot. Default is RNAseqBam1 that was loaded by rna_bam.ribo.}
+\item{RNAbam1}{Dataset 1 to plot. Default is RNAseqBam1 that was loaded by rna_bam.ribo.}
+
+\item{ribo1}{riboseq dataset}
+
+\item{SAMPLE1}{name of sample 1}
 
 \item{CDSonly}{TRUE or FALSE. Only plot CDS region or all riboseq reads in defined area. Default plot all riboseq reads in the defined area.}
 
