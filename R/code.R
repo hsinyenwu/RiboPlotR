@@ -276,18 +276,17 @@ plotGeneModel <- function(gene,uORF,Extend=Extend){
   plot.new()
   yAxis <- (isoforms*0.3+0.1)
   plot.window(genelim,c(0,yAxis))
-  tx_num <- substr(unlist(txByGene[gene])$tx_name,11,nchar(unlist(txByGene[gene])$tx_name))
-  for (i in unlist(txByGene[gene])$tx_name) {
-    w <- which(unlist(txByGene[gene])$tx_name==i)
+  tx_num <- sort(substr(unlist(txByGene[gene])$tx_name,11,nchar(unlist(txByGene[gene])$tx_name)))
+  for (i in sort(unlist(txByGene[gene])$tx_name)) {
+    k=as.numeric(substr(i,11,nchar(i)))
     if (i %in% names(threeUTR)) {
       shortest3UTR <- min(sapply(isoforms.w.3UTR, function(j) width(tail(unlist(threeUTR[j]),1))))
-      plotRanges(isoform=i,uORF,shortest3UTR,ybottom=(yAxis-0.28*w)) #removed
-      text(x=min(start(generanges))-Extend-SUW/64, y=(yAxis-0.28*w+0.05), labels=tx_num[w],cex=1.2)
+      plotRanges(isoform=i,uORF,shortest3UTR,ybottom=(yAxis-0.28*k)) #removed
+      text(x=min(start(generanges))-Extend-SUW/64, y=(yAxis-0.28*k+0.05), labels=tx_num[k],cex=1.2)
     }
     else {
-      plotRanges(isoform=i,uORF,ybottom=(yAxis-0.3*w))
-      # was yAxis-0.28*w+0.05
-      text(x=min(start(generanges))-Extend-SUW/64, y=(yAxis-0.28*w+0.05), labels=tx_num[w],cex=1.2)
+      plotRanges(isoform=i,uORF,ybottom=(yAxis-0.28*k))
+      text(x=min(start(generanges))-Extend-SUW/64, y=(yAxis-0.28*k+0.05), labels=tx_num[k],cex=1.2)
     }
   }
 }
