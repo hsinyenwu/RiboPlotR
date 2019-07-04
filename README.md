@@ -1,7 +1,7 @@
 # RiboPlotR
 RiboPlotR package for Ribo-plot
 
-'''R
+```R
 library(devtools)  
 install_github("hsinyenwu/RiboPlotR")
-'''
+```
