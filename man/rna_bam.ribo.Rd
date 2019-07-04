@@ -5,9 +5,10 @@
 \title{Function to get bam file path, ribo-seq p-site information and axis labels information.}
 \usage{
 rna_bam.ribo(rna1, ribo1, rna2, ribo2, RNAlab1 = "RNA_sample1",
-  RNAlab2 = "RNA_sample2", Ribolab1 = "Ribo_sample1",
-  Ribolab2 = "Ribo_sample2", S_NAME1 = "sample1",
-  S_NAME2 = "sample2", RNAbackground = "#FEFEAE")
+  RNAlab2 = "RNA_sample2", RNAseqBamPaired = TRUE,
+  Ribolab1 = "Ribo_sample1", Ribolab2 = "Ribo_sample2",
+  S_NAME1 = "sample1", S_NAME2 = "sample2",
+  RNAbackground = "#FEFEAE")
 }
 \arguments{
 \item{rna1}{The first RNA-seq bam file path.}
@@ -21,6 +22,8 @@ rna_bam.ribo(rna1, ribo1, rna2, ribo2, RNAlab1 = "RNA_sample1",
 \item{RNAlab1}{The y-axis label for the first RNA-seq datasets.}
 
 \item{RNAlab2}{The y-axis label for the second RNA-seq datasets.}
+
+\item{RNAseqBamPaired}{Whether the RNA bam is paired-end. Enter FALSE for single-end bam file.}
 
 \item{Ribolab1}{The y-axis label for the first ribo-seq datasets.}
 

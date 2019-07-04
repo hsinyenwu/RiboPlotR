@@ -81,6 +81,7 @@ uorf.structure <- function(uorf_annotation,format="gtf",dataSource="",organism="
 #' @param RNAlab2 The y-axis label for the second RNA-seq datasets.
 #' @param Ribolab1 The y-axis label for the first ribo-seq datasets.
 #' @param Ribolab2 The y-axis label for the second ribo-seq datasets.
+#' @param RNAseqBamPaired Whether the RNA bam is paired-end. Enter FALSE for single-end bam file.
 #' @param S_NAME1 Sample 1 name
 #' @param S_NAME2 Sample 2 name
 #' @param RNAbackground The background color for RNA-seq results
@@ -90,7 +91,7 @@ uorf.structure <- function(uorf_annotation,format="gtf",dataSource="",organism="
 #' \dontrun{
 #' uorf.structure(uorf_annotation="/Volumes/BACKUP/project2/TAIR10.29.gtf",dataSource="Araport",organism="Arabidopsis thaliana")
 #' }
-rna_bam.ribo <- function(rna1,ribo1,rna2,ribo2,RNAlab1="RNA_sample1",RNAlab2="RNA_sample2",Ribolab1="Ribo_sample1",Ribolab2="Ribo_sample2",S_NAME1="sample1",S_NAME2="sample2",RNAbackground="#FEFEAE"){
+rna_bam.ribo <- function(rna1,ribo1,rna2,ribo2,RNAlab1="RNA_sample1",RNAlab2="RNA_sample2",RNAseqBamPaired=TRUE,Ribolab1="Ribo_sample1",Ribolab2="Ribo_sample2",S_NAME1="sample1",S_NAME2="sample2",RNAbackground="#FEFEAE"){
   #get path to RNASeq Bam file
   RNAseqBam1 <- rna1
   RNAseqBam2 <- rna2
@@ -99,6 +100,7 @@ rna_bam.ribo <- function(rna1,ribo1,rna2,ribo2,RNAlab1="RNA_sample1",RNAlab2="RN
   colnames(riboR1) <- c("count", "chr", "position", "strand")
   riboR2 <- read.delim(file=ribo2,header=F,stringsAsFactors=F,sep="\t")
   colnames(riboR2) <- c("count", "chr", "position", "strand")
+  assign("RNAseqBamPaired", RNAseqBamPaired, envir = .GlobalEnv)
   assign("RNAseqBam1", RNAseqBam1, envir = .GlobalEnv)
   assign("riboR1", riboR1, envir = .GlobalEnv)
   assign("RNAseqBam2", RNAseqBam2, envir = .GlobalEnv)
@@ -277,16 +279,18 @@ plotGeneModel <- function(gene,uORF,Extend=Extend){
   yAxis <- (isoforms*0.3+0.1)
   plot.window(genelim,c(0,yAxis))
   tx_num <- sort(substr(unlist(txByGene[gene])$tx_name,11,nchar(unlist(txByGene[gene])$tx_name)))
+  # tx_fac <- as.numeric(as.factor(tx_num))
   for (i in sort(unlist(txByGene[gene])$tx_name)) {
     k=as.numeric(substr(i,11,nchar(i)))
+    k2=which(tx_num==k)
     if (i %in% names(threeUTR)) {
       shortest3UTR <- min(sapply(isoforms.w.3UTR, function(j) width(tail(unlist(threeUTR[j]),1))))
-      plotRanges(isoform=i,uORF,shortest3UTR,ybottom=(yAxis-0.28*k)) #removed
-      text(x=min(start(generanges))-Extend-SUW/64, y=(yAxis-0.28*k+0.05), labels=tx_num[k],cex=1.2)
+      plotRanges(isoform=i,uORF,shortest3UTR,ybottom=(yAxis-0.28*k2)) #removed
+      text(x=min(start(generanges))-Extend-SUW/64, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.2)
     }
     else {
-      plotRanges(isoform=i,uORF,ybottom=(yAxis-0.28*k))
-      text(x=min(start(generanges))-Extend-SUW/64, y=(yAxis-0.28*k+0.05), labels=tx_num[k],cex=1.2)
+      plotRanges(isoform=i,uORF,ybottom=(yAxis-0.28*k2))
+      text(x=min(start(generanges))-Extend-SUW/64, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.2)
     }
   }
 }
@@ -515,20 +519,27 @@ PLOTt <-function(YFG,RNAbam1=RNAseqBam1,ribo1=riboR1,ylab1=Ribolab1,SAMPLE1=S_NA
   which1 <- resize(which1,width=width(which1)+Extend,fix = "start")
   what1 <- c("rname", "strand", "pos", "qwidth","seq")
   param <- ScanBamParam(which = which1, what = what1)
+  if (RNAseqBamPaired==TRUE) {
+    readPairs1 <- readGAlignmentPairs(RNAbam1, param=param,strandMode = 2)
+    readPairs1 <- readPairs1[strand(readPairs1)==as.character(strand(GR))]
+    cvg1 <- coverage(readPairs1)
+    Gtx1 <- as.numeric(cvg1[[chr]][ranges(GR)])
+  } else {
+    # param <- ScanBamParam(which = which1, what = what1, tag="NH", flag=flag)
+    cvg1 <- coverage(readGAlignments(RNAseqBam1, param=param))
+    Gtx1 <- as.numeric(cvg1[[chr]][ranges(GR)])
+  }
+  
   #Layout
   isoforms <- length(unlist(txByGene[YFG]))
   layout(matrix(c(1,1,2,2,3,3),3,2,byrow=TRUE), widths=c(6,6,6), heights=c(2,2,0.5*isoforms))
-  readPairs2 <- readGAlignmentPairs(RNAbam1, param=param,strandMode = 2)
-  readPairs2 <- readPairs2[strand(readPairs2)==as.character(strand(GR))]
-  cvg2 <- coverage(readPairs2)
-  Gtx2 <- as.numeric(cvg2[[chr]][ranges(GR)])
-  max_Y <- max(Gtx2)
+  max_Y <- max(Gtx1)
   max_P <- max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend))
-  plot(Gtx2,type="h",col=RNAbackground,lwd=1,xaxt='n',ylim=c(0,max_Y+2))
+  plot(Gtx1,type="h",col=RNAbackground,lwd=1,xaxt='n',ylim=c(0,max_Y+2))
   mtext(RNAlab1, side = 2, line = 2.5,cex=1)
   par(new = T)
-  plot(Gtx2,type="l",col="darkgrey",lwd=1,xaxt='n',ylim=c(0,max_Y+2),yaxt="n",ylab=NULL)
-  lines(x=c(1,length(Gtx2)),y=c(0,0),col="white",lwd=2)
+  plot(Gtx1,type="l",col="darkgrey",lwd=1,xaxt='n',ylim=c(0,max_Y+2),yaxt="n",ylab=NULL)
+  lines(x=c(1,length(Gtx1)),y=c(0,0),col="white",lwd=2)
   legend("topleft",SAMPLE1,bty="n",cex=1.5,text.font=2)
   p_site_plot_p(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend,YLIM=max_P, axesQ="PLOT")
   mtext(Ribolab1, side = 2, line = 2.5,cex=1)
@@ -580,19 +591,39 @@ PLOTt2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=riboR1,ribo2=r
   
   what1 <- c("rname", "strand", "pos", "qwidth","seq")
   param <- ScanBamParam(which = which1, what = what1)
+  
+  if (RNAseqBamPaired==TRUE) {
+    readPairs1 <- readGAlignmentPairs(RNAbam1, param=param,strandMode = 2)
+    readPairs1 <- readPairs1[strand(readPairs1)==as.character(strand(GR))]
+    cvg1 <- coverage(readPairs1)
+    Gtx1 <- as.numeric(cvg1[[chr]][ranges(GR)])
+    
+    readPairs2 <- readGAlignmentPairs(RNAbam2, param=param,strandMode = 2)
+    readPairs2 <- readPairs2[strand(readPairs2)==as.character(strand(GR))]
+    cvg2 <- coverage(readPairs2)
+    Gtx2 <- as.numeric(cvg2[[chr]][ranges(GR)])
+    
+  } else {
+    # param <- ScanBamParam(which = which1, what = what1, tag="NH", flag=flag)
+    cvg1 <- coverage(readGAlignments(RNAseqBam1, param=param))
+    Gtx1 <- as.numeric(cvg1[[chr]][ranges(GR)])
+    cvg2 <- coverage(readGAlignments(RNAseqBam2, param=param))
+    Gtx2 <- as.numeric(cvg2[[chr]][ranges(GR)])
+  }
+  
   #Layout
   isoforms <- length(unlist(txByGene[YFG]))
   layout(matrix(c(1,1,2,2,3,3,4,4,5,5),5,2,byrow=TRUE), widths=c(6,6,6,6,6), heights=c(1.5,1.5,1.5,1.5,0.35*isoforms))
-  readPairs1 <- readGAlignmentPairs(RNAbam1, param=param,strandMode = 2)
-  readPairs1 <- readPairs1[strand(readPairs1)==as.character(strand(GR))]
-  cvg1 <- coverage(readPairs1)
-  Gtx1 <- as.numeric(cvg1[[chr]][ranges(GR)])
-  
-  readPairs2 <- readGAlignmentPairs(RNAbam2, param=param,strandMode = 2)
-  readPairs2 <- readPairs2[strand(readPairs2)==as.character(strand(GR))]
-  cvg2 <- coverage(readPairs2)
-  Gtx2 <- as.numeric(cvg2[[chr]][ranges(GR)])
-  
+  # readPairs1 <- readGAlignmentPairs(RNAbam1, param=param,strandMode = 2)
+  # readPairs1 <- readPairs1[strand(readPairs1)==as.character(strand(GR))]
+  # cvg1 <- coverage(readPairs1)
+  # Gtx1 <- as.numeric(cvg1[[chr]][ranges(GR)])
+  # 
+  # readPairs2 <- readGAlignmentPairs(RNAbam2, param=param,strandMode = 2)
+  # readPairs2 <- readPairs2[strand(readPairs2)==as.character(strand(GR))]
+  # cvg2 <- coverage(readPairs2)
+  # Gtx2 <- as.numeric(cvg2[[chr]][ranges(GR)])
+  # 
   max_Y <- max(max(Gtx1),max(Gtx2))
   max_P <- max(max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend)),
                max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo2,Extend=Extend)))
@@ -653,13 +684,25 @@ PLOTc <-function(YFG,RNAbam1=RNAseqBam1,ribo1=riboR1,ylab1=Ribolab1,SAMPLE1 = S_
   which1 <- resize(which1,width=width(which1)+Extend,fix = "start")
   what1 <- c("rname", "strand", "pos", "qwidth","seq")
   param <- ScanBamParam(which = which1, what = what1)
+  
+  if (RNAseqBamPaired==TRUE) {
+    readPairs <- readGAlignmentPairs(RNAbam1, param=param,strandMode = 2)
+    readPairs <- readPairs[strand(readPairs)==as.character(strand(GR))]
+    cvg <- coverage(readPairs)
+    Gtx <- as.numeric(cvg[[chr]][ranges(GR)])
+  } else {
+    # param <- ScanBamParam(which = which1, what = what1, tag="NH", flag=flag)
+    cvg <- coverage(readGAlignments(RNAbam1, param=param))
+    Gtx <- as.numeric(cvg[[chr]][ranges(GR)])
+  }
+  
   #Layout
   isoforms <- length(unlist(txByGene[YFG]))
   layout(matrix(c(1,1,2,2),2,2,byrow=TRUE), widths=c(6,6), heights=c(2.5,0.45*isoforms))
-  readPairs <- readGAlignmentPairs(RNAbam1, param=param,strandMode = 2)
-  readPairs <- readPairs[strand(readPairs)==as.character(strand(GR))]
-  cvg <- coverage(readPairs)
-  Gtx <- as.numeric(cvg[[chr]][ranges(GR)])
+  # readPairs <- readGAlignmentPairs(RNAbam1, param=param,strandMode = 2)
+  # readPairs <- readPairs[strand(readPairs)==as.character(strand(GR))]
+  # cvg <- coverage(readPairs)
+  # Gtx <- as.numeric(cvg[[chr]][ranges(GR)])
   max_Y <- max(Gtx)
   max_P <- max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend))
   plot(Gtx,type="h",col=RNAbackground,lwd=1,xaxt='n',ylim=c(0,max_Y+2))
@@ -716,14 +759,35 @@ PLOTc2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=riboR1,ribo2=r
   #Layout
   isoforms <- length(unlist(txByGene[YFG]))
   layout(matrix(c(1,1,2,2,3,3),3,2,byrow=TRUE), widths=c(6,6,6), heights=c(2.5,2.5,0.45*isoforms))
-  readPairs1 <- readGAlignmentPairs(RNAbam1, param=param,strandMode = 2)
-  readPairs1 <- readPairs1[strand(readPairs1)==as.character(strand(GR))]
-  cvg1 <- coverage(readPairs1)
-  Gtx1 <- as.numeric(cvg1[[chr]][ranges(GR)])
-  readPairs2 <- readGAlignmentPairs(RNAbam2, param=param,strandMode = 2)
-  readPairs2 <- readPairs2[strand(readPairs2)==as.character(strand(GR))]
-  cvg2 <- coverage(readPairs2)
-  Gtx2 <- as.numeric(cvg2[[chr]][ranges(GR)])
+
+  if (RNAseqBamPaired==TRUE) {
+    readPairs1 <- readGAlignmentPairs(RNAbam1, param=param,strandMode = 2)
+    readPairs1 <- readPairs1[strand(readPairs1)==as.character(strand(GR))]
+    cvg1 <- coverage(readPairs1)
+    Gtx1 <- as.numeric(cvg1[[chr]][ranges(GR)])
+    
+    readPairs2 <- readGAlignmentPairs(RNAbam2, param=param,strandMode = 2)
+    readPairs2 <- readPairs2[strand(readPairs2)==as.character(strand(GR))]
+    cvg2 <- coverage(readPairs2)
+    Gtx2 <- as.numeric(cvg2[[chr]][ranges(GR)])
+    
+  } else {
+    # param <- ScanBamParam(which = which1, what = what1, tag="NH", flag=flag)
+    cvg1 <- coverage(readGAlignments(RNAseqBam1, param=param))
+    Gtx1 <- as.numeric(cvg1[[chr]][ranges(GR)])
+    cvg2 <- coverage(readGAlignments(RNAseqBam2, param=param))
+    Gtx2 <- as.numeric(cvg2[[chr]][ranges(GR)])
+  }
+  
+  # readPairs1 <- readGAlignmentPairs(RNAbam1, param=param,strandMode = 2)
+  # readPairs1 <- readPairs1[strand(readPairs1)==as.character(strand(GR))]
+  # cvg1 <- coverage(readPairs1)
+  # Gtx1 <- as.numeric(cvg1[[chr]][ranges(GR)])
+  # readPairs2 <- readGAlignmentPairs(RNAbam2, param=param,strandMode = 2)
+  # readPairs2 <- readPairs2[strand(readPairs2)==as.character(strand(GR))]
+  # cvg2 <- coverage(readPairs2)
+  # Gtx2 <- as.numeric(cvg2[[chr]][ranges(GR)])
+  
   max_Y <- max(max(Gtx1),max(Gtx2))
   max_P <- max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend),
                p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo2,Extend=Extend))
