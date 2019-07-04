@@ -21,4 +21,4 @@ install_github("hsinyenwu/RiboPlotR")
 
 
 
-### Citation:
+### Citation
