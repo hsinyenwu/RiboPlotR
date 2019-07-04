@@ -1,4 +1,5 @@
 # RiboPlotR
+### Introduction
 RiboPlotR package for Ribo-plot
 
 ```R
@@ -14,3 +15,10 @@ BiocManager::install("Rsamtools")
 library(devtools)  #install devtools if necessary
 install_github("hsinyenwu/RiboPlotR")
 ```
+### Basic functions
+
+### Examples
+
+
+
+### Citation:
