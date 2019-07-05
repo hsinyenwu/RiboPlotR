@@ -81,7 +81,7 @@ uorf.structure <- function(uorf_annotation,format="gtf",dataSource="",organism="
 #' @param RNAlab2 The y-axis label for the second RNA-seq datasets.
 #' @param Ribolab1 The y-axis label for the first ribo-seq datasets.
 #' @param Ribolab2 The y-axis label for the second ribo-seq datasets.
-#' @param RNA_seq_Paired Whether the RNA bam is paired-end. Enter 0 for single-end bam file. 1 for paired-end bam file (default).
+#' @param RNA_seq_Paired Whether the RNA bam is paired-end. Enter "single" for single-end bam file. "paired" for paired-end bam file (default).
 #' @param S_NAME1 Sample 1 name
 #' @param S_NAME2 Sample 2 name
 #' @param RNAbackground The background color for RNA-seq results
@@ -91,7 +91,7 @@ uorf.structure <- function(uorf_annotation,format="gtf",dataSource="",organism="
 #' \dontrun{
 #' uorf.structure(uorf_annotation="/Volumes/BACKUP/project2/TAIR10.29.gtf",dataSource="Araport",organism="Arabidopsis thaliana")
 #' }
-rna_bam.ribo <- function(rna1,ribo1,rna2,ribo2,RNAlab1="RNA_sample1",RNAlab2="RNA_sample2",RNAseqBamPaired=1,Ribolab1="Ribo_sample1",Ribolab2="Ribo_sample2",S_NAME1="sample1",S_NAME2="sample2",RNAbackground="#FEFEAE"){
+rna_bam.ribo <- function(rna1,ribo1,rna2,ribo2,RNAlab1="RNA_sample1",RNAlab2="RNA_sample2",RNAseqBamPaired="paired",Ribolab1="Ribo_sample1",Ribolab2="Ribo_sample2",S_NAME1="sample1",S_NAME2="sample2",RNAbackground="#FEFEAE"){
   #get path to RNASeq Bam file
   RNAseqBam1 <- rna1
   RNAseqBam2 <- rna2
@@ -519,12 +519,12 @@ PLOTt <-function(YFG,RNAbam1=RNAseqBam1,ribo1=riboR1,ylab1=Ribolab1,SAMPLE1=S_NA
   which1 <- resize(which1,width=width(which1)+Extend,fix = "start")
   what1 <- c("rname", "strand", "pos", "qwidth","seq")
   param <- ScanBamParam(which = which1, what = what1)
-  if (RNAseqBamPaired==1) {
+  if (RNAseqBamPaired=="paired") {
     readPairs1 <- readGAlignmentPairs(RNAbam1, param=param,strandMode = 2)
     readPairs1 <- readPairs1[strand(readPairs1)==as.character(strand(GR))]
     cvg1 <- coverage(readPairs1)
     Gtx1 <- as.numeric(cvg1[[chr]][ranges(GR)])
-  } else if (RNAseqBamPaired==0) {
+  } else if (RNAseqBamPaired=="single") {
     cvg1 <- coverage(readGAlignments(RNAseqBam1, param=param))
     Gtx1 <- as.numeric(cvg1[[chr]][ranges(GR)])
   }
@@ -591,7 +591,7 @@ PLOTt2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=riboR1,ribo2=r
   what1 <- c("rname", "strand", "pos", "qwidth","seq")
   param <- ScanBamParam(which = which1, what = what1)
   
-  if (RNAseqBamPaired==1) {
+  if (RNAseqBamPaired=="paired") {
     readPairs1 <- readGAlignmentPairs(RNAbam1, param=param,strandMode = 2)
     readPairs1 <- readPairs1[strand(readPairs1)==as.character(strand(GR))]
     cvg1 <- coverage(readPairs1)
@@ -602,7 +602,7 @@ PLOTt2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=riboR1,ribo2=r
     cvg2 <- coverage(readPairs2)
     Gtx2 <- as.numeric(cvg2[[chr]][ranges(GR)])
     
-  } else if (RNAseqBamPaired==0){
+  } else if (RNAseqBamPaired=="single"){
     # param <- ScanBamParam(which = which1, what = what1, tag="NH", flag=flag)
     cvg1 <- coverage(readGAlignments(RNAseqBam1, param=param))
     Gtx1 <- as.numeric(cvg1[[chr]][ranges(GR)])
@@ -675,12 +675,12 @@ PLOTc <-function(YFG,RNAbam1=RNAseqBam1,ribo1=riboR1,ylab1=Ribolab1,SAMPLE1 = S_
   what1 <- c("rname", "strand", "pos", "qwidth","seq")
   param <- ScanBamParam(which = which1, what = what1)
   
-  if (RNAseqBamPaired==1) {
+  if (RNAseqBamPaired=="paired") {
     readPairs <- readGAlignmentPairs(RNAbam1, param=param,strandMode = 2)
     readPairs <- readPairs[strand(readPairs)==as.character(strand(GR))]
     cvg <- coverage(readPairs)
     Gtx <- as.numeric(cvg[[chr]][ranges(GR)])
-  } else if (RNAseqBamPaired==0) {
+  } else if (RNAseqBamPaired=="single") {
     cvg <- coverage(readGAlignments(RNAbam1, param=param))
     Gtx <- as.numeric(cvg[[chr]][ranges(GR)])
   }
@@ -746,7 +746,7 @@ PLOTc2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=riboR1,ribo2=r
   isoforms <- length(unlist(txByGene[YFG]))
   layout(matrix(c(1,1,2,2,3,3),3,2,byrow=TRUE), widths=c(6,6,6), heights=c(2.5,2.5,0.45*isoforms))
 
-  if (RNAseqBamPaired==1) {
+  if (RNAseqBamPaired=="paired") {
     readPairs1 <- readGAlignmentPairs(RNAbam1, param=param,strandMode = 2)
     readPairs1 <- readPairs1[strand(readPairs1)==as.character(strand(GR))]
     cvg1 <- coverage(readPairs1)
@@ -757,7 +757,7 @@ PLOTc2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=riboR1,ribo2=r
     cvg2 <- coverage(readPairs2)
     Gtx2 <- as.numeric(cvg2[[chr]][ranges(GR)])
     
-  } else if (RNAseqBamPaired==0) {
+  } else if (RNAseqBamPaired=="single") {
     # param <- ScanBamParam(which = which1, what = what1, tag="NH", flag=flag)
     cvg1 <- coverage(readGAlignments(RNAseqBam1, param=param))
     Gtx1 <- as.numeric(cvg1[[chr]][ranges(GR)])
