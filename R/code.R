@@ -436,8 +436,8 @@ p_site_plot_p2 <- function(gene,uORF,uORF.isoform=1,ribo,CDSonly=TRUE,Extend=Ext
     plot(x=RiboRslt$position,y=RiboRslt$count,type="n",xlim=genelim,ylim=c(0,YLIM),lwd=1,xlab=NA, ylab=NA,axes=F)
     lines(x=RiboRslt$position,y=RiboRslt$count,type="h",ylab="Count",xlim=c(txLeft,txRight),YLIM,col=c("white","white","white","white")[RiboRslt$frame],lwd=1.1,xaxt = "n")
     lines(x=RiboRslt$position,y=RiboRslt$count,type="h",ylab="Count",xlim=c(txLeft,txRight),YLIM,col=c("red","#3366FF","#009900","dark grey")[RiboRslt$frame],lwd=1,xaxt = "n")
-    abline(v=cdsStart,lty=2,lwd=1, col="black")
-    abline(v=cdsEnd,lty=2,lwd=1, col="grey")
+    abline(v=cdsStart,lty=2,lwd=1, col="green")
+    abline(v=cdsEnd,lty=2,lwd=1, col="orange")
   }
   else {
     stop("Input transcript is not a coding gene in gtf/gff file.")
