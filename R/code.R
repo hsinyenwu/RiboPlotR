@@ -81,7 +81,7 @@ uorf.structure <- function(uorf_annotation,format="gtf",dataSource="",organism="
 #' @param RNAlab2 The y-axis label for the second RNA-seq datasets.
 #' @param Ribolab1 The y-axis label for the first ribo-seq datasets.
 #' @param Ribolab2 The y-axis label for the second ribo-seq datasets.
-#' @param RNA_seq_Paired Whether the RNA bam is paired-end. Enter "single" for single-end bam file. "paired" for paired-end bam file (default).
+#' @param RNAseqBamPaired Whether the RNA bam is paired-end. Enter "single" for single-end bam file. "paired" for paired-end bam file (default).
 #' @param S_NAME1 Sample 1 name
 #' @param S_NAME2 Sample 2 name
 #' @param RNAbackground The background color for RNA-seq results
