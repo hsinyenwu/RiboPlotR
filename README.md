@@ -19,9 +19,6 @@ install_github("hsinyenwu/RiboPlotR")
 
 ### Examples
 ```R
-library(devtools)
-install_github("hsinyenwu/RiboPlotR")
-
 library(RiboPlotR)
 library(GenomicRanges)
 library(GenomicFeatures)
