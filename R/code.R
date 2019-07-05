@@ -100,7 +100,7 @@ rna_bam.ribo <- function(rna1,ribo1,rna2,ribo2,RNAlab1="RNA_sample1",RNAlab2="RN
   colnames(riboR1) <- c("count", "chr", "position", "strand")
   riboR2 <- read.delim(file=ribo2,header=F,stringsAsFactors=F,sep="\t")
   colnames(riboR2) <- c("count", "chr", "position", "strand")
-  assign("RNAseqBamPaired", RNAseqBamPaired, envir = .GlobalEnv)
+  assign("RNAseqBamPaired", RNA_seq_Paired, envir = .GlobalEnv)
   assign("RNAseqBam1", RNAseqBam1, envir = .GlobalEnv)
   assign("riboR1", riboR1, envir = .GlobalEnv)
   assign("RNAseqBam2", RNAseqBam2, envir = .GlobalEnv)
