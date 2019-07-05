@@ -81,7 +81,7 @@ uorf.structure <- function(uorf_annotation,format="gtf",dataSource="",organism="
 #' @param RNAlab2 The y-axis label for the second RNA-seq datasets.
 #' @param Ribolab1 The y-axis label for the first ribo-seq datasets.
 #' @param Ribolab2 The y-axis label for the second ribo-seq datasets.
-#' @param RNAseqBamPaired Whether the RNA bam is paired-end. Enter FALSE for single-end bam file.
+#' @param RNA_seq_Paired Whether the RNA bam is paired-end. Enter FALSE for single-end bam file.
 #' @param S_NAME1 Sample 1 name
 #' @param S_NAME2 Sample 2 name
 #' @param RNAbackground The background color for RNA-seq results
@@ -91,7 +91,7 @@ uorf.structure <- function(uorf_annotation,format="gtf",dataSource="",organism="
 #' \dontrun{
 #' uorf.structure(uorf_annotation="/Volumes/BACKUP/project2/TAIR10.29.gtf",dataSource="Araport",organism="Arabidopsis thaliana")
 #' }
-rna_bam.ribo <- function(rna1,ribo1,rna2,ribo2,RNAlab1="RNA_sample1",RNAlab2="RNA_sample2",RNAseqBamPaired=TRUE,Ribolab1="Ribo_sample1",Ribolab2="Ribo_sample2",S_NAME1="sample1",S_NAME2="sample2",RNAbackground="#FEFEAE"){
+rna_bam.ribo <- function(rna1,ribo1,rna2,ribo2,RNAlab1="RNA_sample1",RNAlab2="RNA_sample2",RNA_seq_Paired=TRUE,Ribolab1="Ribo_sample1",Ribolab2="Ribo_sample2",S_NAME1="sample1",S_NAME2="sample2",RNAbackground="#FEFEAE"){
   #get path to RNASeq Bam file
   RNAseqBam1 <- rna1
   RNAseqBam2 <- rna2
