@@ -289,6 +289,8 @@ plotGeneModel <- function(gene,uORF,Extend=Extend,p.isoform=isoform){
     if (i %in% names(threeUTR)) {
       shortest3UTR <- min(sapply(isoforms.w.3UTR, function(j) width(tail(unlist(threeUTR[j]),1))))
       plotRanges(isoform=i,uORF,shortest3UTR,ybottom=(yAxis-0.28*k2)) #removed
+      print(k)
+      print(p.isoform)
       if (p.isoform==k){
         text(x=min(start(generanges))-Extend-SUW/64, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=2,font=2)
       } else {
