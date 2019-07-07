@@ -265,9 +265,10 @@ p_site_Y_max <- function(GeneName,isoform,ribo,CDSonly=FALSE,Extend=Extend) {
 #' @param gene gene ID
 #' @param uORF uORF ID
 #' @param Extend number of nucleotides to extend on both side of the gene model
+#' @param p.isoform isoform that is been plotting at the PLOTc, PLOTt,PLOTc2 or PLOTt2 function
 #' @return plot the gene model
 
-plotGeneModel <- function(gene,uORF,Extend=Extend){
+plotGeneModel <- function(gene,uORF,Extend=Extend,p.isoform=isoform){
   isoforms <- length(unlist(txByGene[gene]))
   generanges <- ranges(unlist(exonsByGene[gene]))
   SUW <- sum(width(generanges))
@@ -286,10 +287,16 @@ plotGeneModel <- function(gene,uORF,Extend=Extend){
     if (i %in% names(threeUTR)) {
       shortest3UTR <- min(sapply(isoforms.w.3UTR, function(j) width(tail(unlist(threeUTR[j]),1))))
       plotRanges(isoform=i,uORF,shortest3UTR,ybottom=(yAxis-0.28*k2)) #removed
+      if (p.isoform==k){
+        text(x=min(start(generanges))-Extend-SUW/64, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.2,font=2)
+      }
       text(x=min(start(generanges))-Extend-SUW/64, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.2)
     }
     else {
       plotRanges(isoform=i,uORF,ybottom=(yAxis-0.28*k2))
+      if (p.isoform==k){
+        text(x=min(start(generanges))-Extend-SUW/64, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.2,font=2)
+      }
       text(x=min(start(generanges))-Extend-SUW/64, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.2)
     }
   }
@@ -547,7 +554,7 @@ PLOTt <-function(YFG,RNAbam1=RNAseqBam1,ribo1=riboR1,ylab1=Ribolab1,SAMPLE1=S_NA
     p_site_plot_p2(gene=YFG,uORF=uORF,CDSonly=TRUE,uORF.isoform=1,ribo1,Extend=Extend,YLIM=max_P)
     }
   #Plot gene model
-  plotGeneModel(YFG,Extend=Extend,uORF=uORF)
+  plotGeneModel(YFG,Extend=Extend,uORF=uORF,p.isoform=isoform)
   mtext(substitute(paste(italic(YFG),NAME)),side=3,line=0.4, cex=1.2, col="black", outer=TRUE)
 }
 
@@ -639,7 +646,7 @@ PLOTt2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=riboR1,ribo2=r
   if (!is.null(uORF)) {p_site_plot_p2(gene=YFG,uORF=uORF,CDSonly=TRUE,uORF.isoform=1,ribo2,Extend=Extend,YLIM=max_P)}
   legend("topright",legend=Ribolab1,bty="n",cex=1.2)
   #Plot gene model
-  plotGeneModel(YFG,Extend=Extend,uORF=uORF)
+  plotGeneModel(YFG,Extend=Extend,uORF=uORF,p.isoform=isoform)
   mtext(substitute(paste(italic(YFG),NAME)),side=3,line=0.4, cex=1.2, col="black", outer=TRUE,font=3)
 }
 
@@ -704,7 +711,7 @@ PLOTc <-function(YFG,RNAbam1=RNAseqBam1,ribo1=riboR1,ylab1=Ribolab1,SAMPLE1 = S_
   mtext(RNAlab1, side = 2, line = 2)
   mtext(Ribolab1, side = 4, line = 2)
   #Plot gene model
-  plotGeneModel(YFG,Extend=Extend,uORF=uORF)
+  plotGeneModel(YFG,Extend=Extend,uORF=uORF,p.isoform=isoform)
   mtext(substitute(paste(italic(YFG),NAME)),side=3,line=0.4, cex=1.2, col="black", outer=TRUE,font=3)
 }
 
@@ -791,7 +798,7 @@ PLOTc2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=riboR1,ribo2=r
   mtext(Ribolab1, side=4, outer=T, at=0.64,line =2.5,cex=1.2)
   mtext(RNAlab1, side=2, outer=T, at=0.64,line =2.5,cex=1.2)
   #Plot gene model
-  plotGeneModel(YFG,Extend=Extend,uORF=uORF)
+  plotGeneModel(YFG,Extend=Extend,uORF=uORF,p.isoform=isoform)
   mtext(substitute(paste(italic(YFG),NAME)),side=3,line=0.4, cex=1.2, col="black", outer=TRUE,font=3)
 }
 
