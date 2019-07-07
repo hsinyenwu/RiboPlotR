@@ -19,19 +19,26 @@ install_github("hsinyenwu/RiboPlotR")
 
 ### Examples
 ```R
+# Load essential packages
 library(RiboPlotR)
 library(GenomicRanges)
 library(GenomicFeatures)
 library(GenomicAlignments)
 
-ath <- system.file("extdata", "TAIR10.29_part.gtf", package = "RiboPlotR", mustWork = TRUE)
-RRNA <- system.file("extdata", "Root_test.bam", package = "RiboPlotR", mustWork = TRUE)
-SRNA <- system.file("extdata", "Shoot_test.bam", package = "RiboPlotR", mustWork = TRUE)
-RRibo <- system.file("extdata", "riboRoot.bed", package = "RiboPlotR", mustWork = TRUE)
-SRibo <- system.file("extdata", "riboShoot.bed", package = "RiboPlotR", mustWork = TRUE)
+# Load datasets
+ath <- system.file("extdata", "TAIR10.29_part.gtf", package = "RiboPlotR", mustWork = TRUE) #Annotation
+RRNA <- system.file("extdata", "Root_test.bam", package = "RiboPlotR", mustWork = TRUE) #Root RNA-seq data
+SRNA <- system.file("extdata", "Shoot_test.bam", package = "RiboPlotR", mustWork = TRUE) #Shoot RNA-seq data
+RRibo <- system.file("extdata", "riboRoot.bed", package = "RiboPlotR", mustWork = TRUE) #Root Ribo-seq data
+SRibo <- system.file("extdata", "riboShoot.bed", package = "RiboPlotR", mustWork = TRUE) #Shoot Ribo-seq data
 
+# Run gene.structure function to load gtf
 gene.structure(annotation=ath, format="gtf",dataSource="Araport",organism="Arabidopsis thaliana")
+
+# Run uorf.structure to load uORF gtf
 uorf.structure(uorf_annotation=ath, format="gtf",dataSource="Araport",organism="Arabidopsis thaliana")
+
+# Run rna_bam.ribo to load root and shoot RNA-seq and Ribo-seq data sets
 rna_bam.ribo(rna1=RRNA,rna2=SRNA,ribo1=RRibo,ribo2=SRibo,
              RNAlab1="Shoot_RNA",
              RNAlab2="Root_RNA",
@@ -40,8 +47,7 @@ rna_bam.ribo(rna1=RRNA,rna2=SRNA,ribo1=RRibo,ribo2=SRibo,
              RNAseqBamPaired="single")
 
 PLOTc2("AT4G21910")
-PLOTc("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC")
-
+PLOTc("AT3G02470", uORF = "AT3G02468", NAME = " SAMDC")
 ```
 
 
