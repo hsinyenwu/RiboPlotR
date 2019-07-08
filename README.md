@@ -12,8 +12,6 @@ BiocManager::install("rtracklayer")
 BiocManager::install("Rsamtools") 
 ```
 
-### Basic functions
-
 ### Examples
 ```R
 #Install RiboPlotR
