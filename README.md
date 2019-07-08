@@ -1,6 +1,9 @@
-# RiboPlotR
+# RiboPlotR for visualizing the periodicity of Ribo-seq reads.
 ### Introduction
-RiboPlotR package for visualizing the periodicity of Ribo-seq reads.
+
+RiboPlotR is a R package for visualizing RNA-seq/Ribo-seq reads in the context of a given gene, including Ribo-seq reads mapped to the introns and 5' and 3' untranslated regions (UTRs), with all transcript isoform models displayed in parallel in the plot. There are several advantages to the style used in RiboPlotR: (1) We can detect novel translation events in the unannotated coding regions, such as those in the introns and UTRs. (2) By including all transcript isoform models in the plot, in most cases, we can visually determine which transcript isoform(s) is/are translated. (3) By comparing sequencing data and annotated gene models in parallel, we can identify discrepancies between the Ribo-seq data and the- predicted coding sequences (CDSs), such as frameshifts and variations in coding regions; similarly, any deviations in the mRNA profile from the annotated transcript isoforms are also easily visualized. (4) The relative Ribo-seq abundance in different transcript features, such as introns or upstream ORFs (uORFs), can be visualized and thus used to suggest potential regulatory mechanisms. Below, we describe uses for and examples with RiboPlotR to visualize translation events in a gene with a predicted uORF and different transcript isoforms.
+
+RiboPlotR separately plots each isoform of a given gene. Only one isoform is plotted at a time, and the default is to plot isoform 1. For each isoform, the same RNA-seq and Ribo-seq reads are used for plotting; the only difference is the expected coding region for the Ribo-seq reads, which is indicated by a black dashed line (expected translation start) and a grey dashed line (expected translation stop). Inside the expected coding region, Ribo-seq P-sites that are mapped in the expected frame, the +1 frame, and the +2 frame are presented using red, blue and green lines, respectively. Ribo-seq P-sites that are outside the expected coding region are shown in grey. The x-axis below the gene models indicates the genomic coordinates, while the y-axis indicates the Ribo-seq P-site counts. When an isoform is translated, the majority of P-sites should cover the expected coding sequences and are shown in red. If two isoforms cover a different coding region at the 3' ends, the two plots will have different color schemes at the 3' end. This design allows users to quickly see if a plotted isoform is being actively translated (see examples below).  
 
 Install required packages.
 ```R
@@ -16,8 +19,6 @@ BiocManager::install("Rsamtools")
 library(devtools)
 install_github("hsinyenwu/RiboPlotR")
 ```
-
-RiboPlotR separately plots each isoform of a given gene. Only one isoform is plotted at a time, and the default is to plot isoform 1. For each isoform, the same RNA-seq and Ribo-seq reads are used for plotting; the only difference is the expected coding region for the Ribo-seq reads, which is indicated by a black dashed line (expected translation start) and a grey dashed line (expected translation stop). Inside the expected coding region, Ribo-seq P-sites that are mapped in the expected frame, the +1 frame, and the +2 frame are presented using red, blue and green lines, respectively. Ribo-seq P-sites that are outside the expected coding region are shown in grey. The x-axis below the gene models indicates the genomic coordinates, while the y-axis indicates the Ribo-seq P-site counts. When an isoform is translated, the majority of P-sites should cover the expected coding sequences and are shown in red. If two isoforms cover a different coding region at the 3' ends, the two plots will have different color schemes at the 3' end. This design allows users to quickly see if a plotted isoform is being actively translated (see examples below).  
 
 ### The basic workflow of RiboPlotR is:
 1. Run gene.structure(); load the transcriptome annotation gtf/gff3 file containing the gene, mRNA/transcript, exon and CDS ranges.  
@@ -39,7 +40,7 @@ library(GenomicRanges)
 library(GenomicFeatures)
 library(GenomicAlignments)
 
-# Load datasets
+# Load example datasets
 agtf <- system.file("extdata", "TAIR10.29_part.gtf", package = "RiboPlotR", mustWork = TRUE) #Annotation
 ugtf <- system.file("extdata", "AT3G02468.gtf", package = "RiboPlotR", mustWork = TRUE) #uORF annotation
 RRNA <- system.file("extdata", "Root_test_PE.bam", package = "RiboPlotR", mustWork = TRUE) #Root RNA-seq data
