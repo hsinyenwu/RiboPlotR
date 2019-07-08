@@ -10,14 +10,14 @@ BiocManager::install("GenomicFeatures")
 BiocManager::install("GenomicAlignments")
 BiocManager::install("rtracklayer") 
 BiocManager::install("Rsamtools") 
+
+#Install RiboPlotR
+library(devtools)
+install_github("hsinyenwu/RiboPlotR")
 ```
 
 ### Examples
 ```R
-#Install RiboPlotR
-library(devtools)
-install_github("hsinyenwu/RiboPlotR")
-
 # Load RiboPlotR and essential packages
 library(RiboPlotR)
 library(GenomicRanges)
