@@ -57,7 +57,7 @@ rna_bam.ribo(Ribo1=RRibo,
 PLOTc2("AT4G21910") #default using first isoform
 PLOTc2("AT4G21910",isoform=2)
 
-#Plot Root data (PLOTc use the first RNA-seq and Ribo-seq dataset by default. Here the first dataset is the Root dataset.) 
+#Plot Root data (PLOTc uses the first RNA-seq and Ribo-seq dataset by default. Here the first dataset is the Root dataset.) 
 PLOTc("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC")
 
 #Plot Shoot data (Here is an example how to plot the second dataset using PLOTc)
@@ -65,9 +65,7 @@ PLOTc("AT3G02470",uORF="AT3G02468",NAME=" SAMDC",RNAbam1 = RNAseqBam2, ribo1 = R
 
 #Plot both dataset wiht PLOTC2
 PLOTc2("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC",isoform=3)
-
 ```
-
 
 ### Citation
 Visualizing the periodic Ribo-seq reads with RiboPlotR
