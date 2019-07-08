@@ -74,13 +74,19 @@ PLOTc("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC")
 #Plot Shoot data (Here is an example how to plot the second dataset using PLOTc)
 PLOTc("AT3G02470",uORF="AT3G02468",NAME=" SAMDC",RNAbam1 = RNAseqBam2, ribo1 = Ribo2, SAMPLE1 = "Shoot")
 ```
-![SAMDC_RS](https://github.com/hsinyenwu/RiboPlotR/blob/master/image/SAMDC_shoot.png)
+![SAMDC_uORF](https://github.com/hsinyenwu/RiboPlotR/blob/master/image/SAMDC_shoot.png)
 ```R
 #Plot both dataset wiht PLOTC2
 PLOTc2("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC",isoform=3)
 ```
-![SAMDC_RS](https://github.com/hsinyenwu/RiboPlotR/blob/master/image/SAMDC_Root_Shoot.png)
-
+![SAMDC_uORF](https://github.com/hsinyenwu/RiboPlotR/blob/master/image/SAMDC_PLOTt2.png)
+```R
+PLOTt2("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC",isoform=3)
+```
+![SAMDC_uORF](https://github.com/hsinyenwu/RiboPlotR/blob/master/image/SAMDC_PLOTt_Root.png)
+```R
+PLOTt("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC",isoform=3)
+```
 
 ### Citation
 Visualizing the periodic Ribo-seq reads with RiboPlotR
