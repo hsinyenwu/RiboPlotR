@@ -3,7 +3,6 @@
 RiboPlotR package for Ribo-plot
 
 ```R
-
 if (!requireNamespace("BiocManager", quietly = TRUE))
 install.packages("BiocManager")
 BiocManager::install("GenomicRanges")
@@ -11,15 +10,17 @@ BiocManager::install("GenomicFeatures")
 BiocManager::install("GenomicAlignments")
 BiocManager::install("rtracklayer") 
 BiocManager::install("Rsamtools") 
-
-library(devtools)  #install devtools if necessary
-install_github("hsinyenwu/RiboPlotR")
 ```
+
 ### Basic functions
 
 ### Examples
 ```R
-# Load essential packages
+#Install RiboPlotR
+library(devtools)
+install_github("hsinyenwu/RiboPlotR")
+
+# Load RiboPlotR and essential packages
 library(RiboPlotR)
 library(GenomicRanges)
 library(GenomicFeatures)
@@ -27,8 +28,9 @@ library(GenomicAlignments)
 
 # Load datasets
 ath <- system.file("extdata", "TAIR10.29_part.gtf", package = "RiboPlotR", mustWork = TRUE) #Annotation
-RRNA <- system.file("extdata", "Root_test.bam", package = "RiboPlotR", mustWork = TRUE) #Root RNA-seq data
-SRNA <- system.file("extdata", "Shoot_test.bam", package = "RiboPlotR", mustWork = TRUE) #Shoot RNA-seq data
+uth <- system.file("extdata", "AT3G02468.gtf", package = "RiboPlotR", mustWork = TRUE) #uORF annotation
+RRNA <- system.file("extdata", "Root_test_PE.bam", package = "RiboPlotR", mustWork = TRUE) #Root RNA-seq data
+SRNA <- system.file("extdata", "Shoot_test_PE.bam", package = "RiboPlotR", mustWork = TRUE) #Shoot RNA-seq data
 RRibo <- system.file("extdata", "riboRoot.bed", package = "RiboPlotR", mustWork = TRUE) #Root Ribo-seq data
 SRibo <- system.file("extdata", "riboShoot.bed", package = "RiboPlotR", mustWork = TRUE) #Shoot Ribo-seq data
 
@@ -36,18 +38,22 @@ SRibo <- system.file("extdata", "riboShoot.bed", package = "RiboPlotR", mustWork
 gene.structure(annotation=ath, format="gtf",dataSource="Araport",organism="Arabidopsis thaliana")
 
 # Run uorf.structure to load uORF gtf
-uorf.structure(uorf_annotation=ath, format="gtf",dataSource="Araport",organism="Arabidopsis thaliana")
+uorf.structure(uorf_annotation=uth, format="gtf",dataSource="Araport",organism="Arabidopsis thaliana")
 
 # Run rna_bam.ribo to load root and shoot RNA-seq and Ribo-seq data sets
 rna_bam.ribo(rna1=RRNA,rna2=SRNA,ribo1=RRibo,ribo2=SRibo,
-             RNAlab1="Shoot_RNA",
-             RNAlab2="Root_RNA",
-             Ribolab1="Shoot_Ribo",
-             Ribolab2="Root_Ribo",
-             RNAseqBamPaired="single")
+             RNAlab1="RNA count",
+             RNAlab2="RNA count",
+             Ribolab1="Ribo count",
+             Ribolab2="Ribo count",
+             S_NAME1="Root",
+             S_NAME2="Shoot",
+             RNAseqBamPaired="paired")
 
-PLOTc2("AT4G21910")
-PLOTc("AT3G02470", uORF = "AT3G02468", NAME = " SAMDC")
+PLOTc2("AT4G21910",isoform=2)
+PLOTc("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC")
+PLOTc2("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC",isoform=3)
+
 ```
 
 
