@@ -17,16 +17,16 @@ library(devtools)
 install_github("hsinyenwu/RiboPlotR")
 ```
 ### The basic workflow of RiboPlotR is:
-1. Run gene.structure(); load the transcriptome annotation gtf/gff3 file containing the gene, mRNA/transcript, exon and CDS ranges.
-2. (Optional) To plot a uORF for a transcript, users will also load the uORF gtf/gff3 file using the uorf.structure() function.
-3. Run rna_bam.ribo(); load the mapped and coordinate-sorted RNA-seq bam file and the ribo-seq P-site position file.
-4. Use one of the four functions below, enter gene name and isoform number to plot the translation of the isoform.
+1. Run gene.structure(); load the transcriptome annotation gtf/gff3 file containing the gene, mRNA/transcript, exon and CDS ranges.  
+2. (Optional) To plot a uORF for a transcript, users will also load the uORF gtf/gff3 file using the uorf.structure() function.  
+3. Run rna_bam.ribo(); load the mapped and coordinate-sorted RNA-seq bam file and the ribo-seq P-site position file.  
+4. Use one of the four functions below, enter gene name and isoform number to plot the translation of the isoform.  
 
 ### Four styles of the plots are available:
-PLOTc: plots RNA-seq and Ribo-seq in one panel (plot compact)
-PLOTt: plots RNA-seq and Ribo-seq separately in two panels (plot two)
-PLOTc2: plots RNA-seq and Ribo-seq in one panel for two conditions
-PLOTt2: plots RNA-seq and Ribo-seq separately for two conditions
+PLOTc: plots RNA-seq and Ribo-seq in one panel (plot compact)  
+PLOTt: plots RNA-seq and Ribo-seq separately in two panels (plot two)  
+PLOTc2: plots RNA-seq and Ribo-seq in one panel for two conditions  
+PLOTt2: plots RNA-seq and Ribo-seq separately for two conditions  
 
 ### Examples
 ```R
