@@ -60,7 +60,10 @@ PLOTc2("AT4G21910") #default using first isoform
 
 ```R
 PLOTc2("AT4G21910",isoform=2)
+```
+![AT4G21910.2](https://github.com/hsinyenwu/RiboPlotR/blob/master/image/AT4G21910_isoform2.png)
 
+```R
 #Plot Root data (PLOTc uses the first RNA-seq and Ribo-seq dataset by default. Here the first dataset is the Root dataset.) 
 PLOTc("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC")
 ```
