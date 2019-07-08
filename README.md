@@ -2,6 +2,7 @@
 ### Introduction
 RiboPlotR package for Ribo-plot
 
+Install required packages.
 ```R
 if (!requireNamespace("BiocManager", quietly = TRUE))
 install.packages("BiocManager")
@@ -49,14 +50,15 @@ rna_bam.ribo(rna1=RRNA,rna2=SRNA,ribo1=RRibo,ribo2=SRibo,
              RNAseqBamPaired="paired")
 
 PLOTc2("AT4G21910",isoform=2)
+
 PLOTc("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC")
 PLOTc2("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC",isoform=3)
-
 ```
 
 
 ### Citation
-
+Visualizing the periodic Ribo-seq reads with RiboPlotR
+https://www.biorxiv.org/content/10.1101/694646v1
 ### Session Info
 ```R
 sessionInfo()
