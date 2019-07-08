@@ -60,7 +60,9 @@ PLOTc2("AT4G21910",isoform=2)
 #Plot Root data (PLOTc uses the first RNA-seq and Ribo-seq dataset by default. Here the first dataset is the Root dataset.) 
 PLOTc("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC")
 ```
-[[https://github.com/hsinyenwu/RiboPlotR/blob/master/image/SAMDC_uORF.png]]
+
+![SAMDC_uORF](https://github.com/hsinyenwu/RiboPlotR/blob/master/image/SAMDC_uORF.png)
+
 ```R
 #Plot Shoot data (Here is an example how to plot the second dataset using PLOTc)
 PLOTc("AT3G02470",uORF="AT3G02468",NAME=" SAMDC",RNAbam1 = RNAseqBam2, ribo1 = Ribo2, SAMPLE1 = "Shoot")
