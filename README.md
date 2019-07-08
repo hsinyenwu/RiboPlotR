@@ -34,10 +34,10 @@ RRibo <- system.file("extdata", "riboRoot.bed", package = "RiboPlotR", mustWork 
 SRibo <- system.file("extdata", "riboShoot.bed", package = "RiboPlotR", mustWork = TRUE) #Shoot Ribo-seq data
 
 # Run gene.structure function to load gtf
-gene.structure(annotation=ath, format="gtf",dataSource="Araport",organism="Arabidopsis thaliana")
+gene.structure(annotation=agtf, format="gtf",dataSource="Araport",organism="Arabidopsis thaliana")
 
 # Run uorf.structure to load uORF gtf
-uorf.structure(uorf_annotation=uth, format="gtf",dataSource="Araport",organism="Arabidopsis thaliana")
+uorf.structure(uorf_annotation=ugtf, format="gtf",dataSource="Araport",organism="Arabidopsis thaliana")
 
 # Run rna_bam.ribo to load root and shoot RNA-seq and Ribo-seq data sets
 # Here root is the first dataset and shoot is the second dataset 
