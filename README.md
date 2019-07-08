@@ -55,6 +55,11 @@ rna_bam.ribo(Ribo1=RRibo,
 
 #Plot AT4G21910 
 PLOTc2("AT4G21910") #default using first isoform
+```
+![SAMDC_uORF](https://github.com/hsinyenwu/RiboPlotR/blob/master/image/AT4G21910.png)  
+
+```R
+AT4G21910.png
 PLOTc2("AT4G21910",isoform=2)
 
 #Plot Root data (PLOTc uses the first RNA-seq and Ribo-seq dataset by default. Here the first dataset is the Root dataset.) 
