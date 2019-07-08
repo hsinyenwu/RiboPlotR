@@ -73,10 +73,10 @@ uorf.structure <- function(uorf_annotation,format="gtf",dataSource="",organism="
 #
 #' @title Function to get bam file path, ribo-seq p-site information and axis labels information.
 #' @description This function obtains the RNA-seq bam file path, ribo-seq p-site file information, and the labels for y axes of the RNA-seq and ribo-seq plots
-#' @param rna1 The first RNA-seq bam file path.
-#' @param ribo1 The first ribo-seq tsv file path.
-#' @param rna2 The second RNA-seq bam file path.
-#' @param ribo2 The second ribo-seq tsv file path.
+#' @param Ribo1 The first ribo-seq tsv file path.
+#' @param Ribo2 The second ribo-seq tsv file path.
+#' @param RNAseqBam1 The first RNA-seq bam file path.
+#' @param RNAseqBam2 The second RNA-seq bam file path.
 #' @param RNAlab1 The y-axis label for the first RNA-seq datasets.
 #' @param RNAlab2 The y-axis label for the second RNA-seq datasets.
 #' @param Ribolab1 The y-axis label for the first ribo-seq datasets.
@@ -91,20 +91,20 @@ uorf.structure <- function(uorf_annotation,format="gtf",dataSource="",organism="
 #' \dontrun{
 #' uorf.structure(uorf_annotation="/Volumes/BACKUP/project2/TAIR10.29.gtf",dataSource="Araport",organism="Arabidopsis thaliana")
 #' }
-rna_bam.ribo <- function(rna1,ribo1,rna2,ribo2,RNAlab1="RNA_sample1",RNAlab2="RNA_sample2",RNAseqBamPaired="paired",Ribolab1="Ribo_sample1",Ribolab2="Ribo_sample2",S_NAME1="sample1",S_NAME2="sample2",RNAbackground="#FEFEAE"){
+rna_bam.ribo <- function(Ribo1,Ribo2,RNAseqBam1,RNAseqBam2,RNAlab1="RNA_sample1",RNAlab2="RNA_sample2",RNAseqBamPaired="paired",Ribolab1="Ribo_sample1",Ribolab2="Ribo_sample2",S_NAME1="sample1",S_NAME2="sample2",RNAbackground="#FEFEAE"){
   #get path to RNASeq Bam file
-  RNAseqBam1 <- rna1
-  RNAseqBam2 <- rna2
+  RNAseqBam1 <- RNAseqBam1
+  RNAseqBam2 <- RNAseqBam2
   #get ribo-seq all p-site information
-  riboR1 <- read.delim(file=ribo1,header=F,stringsAsFactors=F,sep="\t")
-  colnames(riboR1) <- c("count", "chr", "position", "strand")
-  riboR2 <- read.delim(file=ribo2,header=F,stringsAsFactors=F,sep="\t")
-  colnames(riboR2) <- c("count", "chr", "position", "strand")
+  Ribo1 <- read.delim(file=Ribo1,header=F,stringsAsFactors=F,sep="\t")
+  colnames(Ribo1) <- c("count", "chr", "position", "strand")
+  Ribo2 <- read.delim(file=Ribo2,header=F,stringsAsFactors=F,sep="\t")
+  colnames(Ribo2) <- c("count", "chr", "position", "strand")
   assign("RNAseqBamPaired", RNAseqBamPaired, envir = .GlobalEnv)
   assign("RNAseqBam1", RNAseqBam1, envir = .GlobalEnv)
-  assign("riboR1", riboR1, envir = .GlobalEnv)
+  assign("Ribo1", Ribo1, envir = .GlobalEnv)
   assign("RNAseqBam2", RNAseqBam2, envir = .GlobalEnv)
-  assign("riboR2", riboR2, envir = .GlobalEnv)
+  assign("Ribo2", Ribo2, envir = .GlobalEnv)
   assign("RNAlab1", RNAlab1, envir = .GlobalEnv)
   assign("RNAlab2", RNAlab2, envir = .GlobalEnv)
   assign("Ribolab1", Ribolab1, envir = .GlobalEnv)
@@ -512,7 +512,7 @@ firstInFramePSitePerExonNegative <- function(x){
 #' @export
 #'
 # No @examples
-PLOTt <-function(YFG,RNAbam1=RNAseqBam1,ribo1=riboR1,ylab1=Ribolab1,SAMPLE1=S_NAME1,CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="") {
+PLOTt <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1=S_NAME1,CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="") {
   transcript_id <- unlist(txByGene[YFG])$tx_name
   #Do not set first transcript because some genes do not have isoform 1
   suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,11))[1])
@@ -580,7 +580,7 @@ PLOTt <-function(YFG,RNAbam1=RNAseqBam1,ribo1=riboR1,ylab1=Ribolab1,SAMPLE1=S_NA
 #' @return 2 plots for RNAseq and Riboseq in 2 different conditions. 
 #' @export
 
-PLOTt2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=riboR1,ribo2=riboR2,ylab1=Ribolab1,ylab2=Ribolab2,SAMPLE1 = S_NAME1, SAMPLE2 = S_NAME2,CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="") {
+PLOTt2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ribo2,ylab1=Ribolab1,ylab2=Ribolab2,SAMPLE1 = S_NAME1, SAMPLE2 = S_NAME2,CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="") {
   transcript_id <- unlist(txByGene[YFG])$tx_name
   #Do not set first transcript because some genes do not have isoform 1
   suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,11))[1])
@@ -667,7 +667,7 @@ PLOTt2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=riboR1,ribo2=r
 #' @return Both RNAseq and Riboseq plot together for one set of data
 #' @export
 
-PLOTc <-function(YFG,RNAbam1=RNAseqBam1,ribo1=riboR1,ylab1=Ribolab1,SAMPLE1 = S_NAME1,CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="") {
+PLOTc <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_NAME1,CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="") {
   transcript_id <- unlist(txByGene[YFG])$tx_name
   #Do not set first transcript because some genes do not have isoform 1
   suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,11))[1])
@@ -735,7 +735,7 @@ PLOTc <-function(YFG,RNAbam1=RNAseqBam1,ribo1=riboR1,ylab1=Ribolab1,SAMPLE1 = S_
 #' @return 2 plots for RNAseq and Riboseq in 2 different genotypes/conditions. 
 #' @export
 
-PLOTc2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=riboR1,ribo2=riboR2,SAMPLE1 = S_NAME1, SAMPLE2 = S_NAME2, CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="") {
+PLOTc2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ribo2,SAMPLE1 = S_NAME1, SAMPLE2 = S_NAME2, CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="") {
   transcript_id <- unlist(txByGene[YFG])$tx_name
   #Do not set first transcript because some genes do not have isoform 1
   suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,11))[1])
