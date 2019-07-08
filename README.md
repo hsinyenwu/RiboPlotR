@@ -26,8 +26,8 @@ library(GenomicFeatures)
 library(GenomicAlignments)
 
 # Load datasets
-ath <- system.file("extdata", "TAIR10.29_part.gtf", package = "RiboPlotR", mustWork = TRUE) #Annotation
-uth <- system.file("extdata", "AT3G02468.gtf", package = "RiboPlotR", mustWork = TRUE) #uORF annotation
+agtf <- system.file("extdata", "TAIR10.29_part.gtf", package = "RiboPlotR", mustWork = TRUE) #Annotation
+ugtf <- system.file("extdata", "AT3G02468.gtf", package = "RiboPlotR", mustWork = TRUE) #uORF annotation
 RRNA <- system.file("extdata", "Root_test_PE.bam", package = "RiboPlotR", mustWork = TRUE) #Root RNA-seq data
 SRNA <- system.file("extdata", "Shoot_test_PE.bam", package = "RiboPlotR", mustWork = TRUE) #Shoot RNA-seq data
 RRibo <- system.file("extdata", "riboRoot.bed", package = "RiboPlotR", mustWork = TRUE) #Root Ribo-seq data
@@ -40,19 +40,32 @@ gene.structure(annotation=ath, format="gtf",dataSource="Araport",organism="Arabi
 uorf.structure(uorf_annotation=uth, format="gtf",dataSource="Araport",organism="Arabidopsis thaliana")
 
 # Run rna_bam.ribo to load root and shoot RNA-seq and Ribo-seq data sets
-rna_bam.ribo(rna1=RRNA,rna2=SRNA,ribo1=RRibo,ribo2=SRibo,
+# Here root is the first dataset and shoot is the second dataset 
+rna_bam.ribo(Ribo1=RRibo,
+             RNAseqBam1=RRNA,
              RNAlab1="RNA count",
-             RNAlab2="RNA count",
              Ribolab1="Ribo count",
-             Ribolab2="Ribo count",
              S_NAME1="Root",
+             Ribo2=SRibo,
+             RNAseqBam2=SRNA,
+             RNAlab2="RNA count",
+             Ribolab2="Ribo count",
              S_NAME2="Shoot",
              RNAseqBamPaired="paired")
 
+#Plot AT4G21910 
+PLOTc2("AT4G21910") #default using first isoform
 PLOTc2("AT4G21910",isoform=2)
 
+#Plot Root data (PLOTc use the first RNA-seq and Ribo-seq dataset by default. Here the first dataset is the Root dataset.) 
 PLOTc("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC")
+
+#Plot Shoot data (Here is an example how to plot the second dataset using PLOTc)
+PLOTc("AT3G02470",uORF="AT3G02468",NAME=" SAMDC",RNAbam1 = RNAseqBam2, ribo1 = Ribo2, SAMPLE1 = "Shoot")
+
+#Plot both dataset wiht PLOTC2
 PLOTc2("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC",isoform=3)
+
 ```
 
 
