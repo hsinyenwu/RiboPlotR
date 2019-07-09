@@ -26,6 +26,26 @@ install_github("hsinyenwu/RiboPlotR")
 3. Run rna_bam.ribo(); load the mapped and coordinate-sorted RNA-seq bam file and the ribo-seq P-site position file.  
 4. Use one of the four functions below, enter gene name and isoform number to plot the translation of the isoform.  
 
+### Files required for RiboPlotR
+
+RiboPlotR requires the following input files: 
+1. A gtf or gff3 file for transcriptome annotation, which should be recognizable with the GenomicFeatures package
+2. A mapped and coordinate-sorted bam file(s) for RNA-seq
+3. A tab-delimited file(s) for Ribo-seq P-site coordinates
+4. A gtf or gff3 file for uORF coordinates is optional. 
+Users can read in up to two sets of bam and P-site files to compare translation under two different conditions.
+
+### Note: the Ribo-seq P-site coordinate file should look like this:
+The first to forth columns are the "total counts", "chromosome number", "P-site position" and "strand" (+ or -), respectively.
+```
+1   1  1000000      +
+3   1 10000007      +
+3   1 10000010      +
+3   1 10000016      +
+1   1 10000018      +
+4   1 10000019      +
+```
+
 ### Four styles of the plots are available:
 PLOTc: plots RNA-seq and Ribo-seq in one panel (plot compact)  
 PLOTt: plots RNA-seq and Ribo-seq separately in two panels (plot two)  
