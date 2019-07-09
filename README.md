@@ -48,7 +48,7 @@ SRNA <- system.file("extdata", "Shoot_test_PE.bam", package = "RiboPlotR", mustW
 RRibo <- system.file("extdata", "riboRoot.bed", package = "RiboPlotR", mustWork = TRUE) #Root Ribo-seq data
 SRibo <- system.file("extdata", "riboShoot.bed", package = "RiboPlotR", mustWork = TRUE) #Shoot Ribo-seq data
 
-# Run gene.structure function to load gtf
+# Run gene.structure function to load gtf for annotated protein coding genes
 gene.structure(annotation=agtf, format="gtf",dataSource="Araport",organism="Arabidopsis thaliana")
 
 # Run uorf.structure to load uORF gtf
@@ -56,6 +56,7 @@ uorf.structure(uorf_annotation=ugtf, format="gtf",dataSource="Araport",organism=
 
 # Run rna_bam.ribo to load root and shoot RNA-seq and Ribo-seq data sets
 # Here root is the first dataset and shoot is the second dataset 
+
 rna_bam.ribo(Ribo1=RRibo,
              RNAseqBam1=RRNA,
              RNAlab1="RNA count",
@@ -108,8 +109,9 @@ PLOTt("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC",isoform=3)
 ![SAMDC_uORF](https://github.com/hsinyenwu/RiboPlotR/blob/master/image/SAMDC_PLOTt_Root.png)
 
 ### Citation
-Visualizing the periodic Ribo-seq reads with RiboPlotR
-https://www.biorxiv.org/content/10.1101/694646v1
+Visualizing the periodic Ribo-seq reads with RiboPlotR  
+https://www.biorxiv.org/content/10.1101/694646v1  
+
 ### Session Info
 ```R
 sessionInfo()
