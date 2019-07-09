@@ -1,6 +1,11 @@
-# RiboPlotR
+# RiboPlotR for visualizing the periodicity of Ribo-seq reads.
 ### Introduction
-RiboPlotR package for Ribo-plot
+
+RiboPlotR is a R package for visualizing RNA-seq/Ribo-seq reads in the context of a given gene, including Ribo-seq reads mapped to the introns and 5' and 3' untranslated regions (UTRs), with all transcript isoform models displayed in parallel in the plot. There are several advantages to the style used in RiboPlotR: (1) We can detect novel translation events in the unannotated coding regions, such as those in the introns and UTRs. (2) By including all transcript isoform models in the plot, in most cases, we can visually determine which transcript isoform(s) is/are translated. (3) By comparing sequencing data and annotated gene models in parallel, we can identify discrepancies between the Ribo-seq data and the- predicted coding sequences (CDSs), such as frameshifts and variations in coding regions; similarly, any deviations in the mRNA profile from the annotated transcript isoforms are also easily visualized. (4) The relative Ribo-seq abundance in different transcript features, such as introns or upstream ORFs (uORFs), can be visualized and thus used to suggest potential regulatory mechanisms. Below, we describe uses for and examples with RiboPlotR to visualize translation events in a gene with a predicted uORF and different transcript isoforms.
+
+RiboPlotR separately plots each isoform of a given gene. Only one isoform is plotted at a time, and the default is to plot isoform 1. For each isoform, the same RNA-seq and Ribo-seq reads are used for plotting; the only difference is the expected coding region for the Ribo-seq reads, which is indicated by a black dashed line (expected translation start) and a grey dashed line (expected translation stop). Inside the expected coding region, Ribo-seq P-sites that are mapped in the expected frame, the +1 frame, and the +2 frame are presented using red, blue and green lines, respectively. Ribo-seq P-sites that are outside the expected coding region are shown in grey. The x-axis below the gene models indicates the genomic coordinates, while the y-axis indicates the Ribo-seq P-site counts. When an isoform is translated, the majority of P-sites should cover the expected coding sequences and are shown in red. If two isoforms cover a different coding region at the 3' ends, the two plots will have different color schemes at the 3' end. This design allows users to quickly see if a plotted isoform is being actively translated (see examples below).  
+
+### Install RiboPlotR and its required packages: 
 
 Install required packages.
 ```R
@@ -17,7 +22,39 @@ library(devtools)
 install_github("hsinyenwu/RiboPlotR")
 ```
 
-### Examples
+### The basic workflow of RiboPlotR is:
+1. Run gene.structure(); load the transcriptome annotation gtf/gff3 file containing the gene, mRNA/transcript, exon and CDS ranges.  
+2. (Optional) To plot a uORF for a transcript, users will also load the uORF gtf/gff3 file using the uorf.structure() function.  
+3. Run rna_bam.ribo(); load the mapped and coordinate-sorted RNA-seq bam file and the ribo-seq P-site position file.  
+4. Use one of the four functions below, enter gene name and isoform number to plot the translation of the isoform.  
+
+### Files required for RiboPlotR:
+
+RiboPlotR requires the following input files: 
+1. A gtf or gff3 file for transcriptome annotation, which should be recognizable with the GenomicFeatures package
+2. A mapped and coordinate-sorted bam file(s) for RNA-seq
+3. A tab-delimited file(s) for Ribo-seq P-site coordinates (see below)
+4. A gtf or gff3 file for uORF coordinates is optional. 
+Users can read in up to two sets of bam and P-site files to compare translation under two different conditions.
+
+### Note: the Ribo-seq P-site coordinate file should look like this:
+The first to forth columns are the "total counts", "chromosome number", "P-site position" and "strand" (+ or -), respectively.
+```
+1   1  1000000      +
+3   1 10000007      +
+3   1 10000010      +
+3   1 10000016      +
+1   1 10000018      +
+4   1 10000019      +
+```
+
+### Four styles of the plots are available:
+PLOTc: plots RNA-seq and Ribo-seq in one panel (plot compact)  
+PLOTt: plots RNA-seq and Ribo-seq separately in two panels (plot two)  
+PLOTc2: plots RNA-seq and Ribo-seq in one panel for two conditions  
+PLOTt2: plots RNA-seq and Ribo-seq separately for two conditions  
+
+### Examples:
 ```R
 # Load RiboPlotR and essential packages
 library(RiboPlotR)
@@ -25,41 +62,79 @@ library(GenomicRanges)
 library(GenomicFeatures)
 library(GenomicAlignments)
 
-# Load datasets
-ath <- system.file("extdata", "TAIR10.29_part.gtf", package = "RiboPlotR", mustWork = TRUE) #Annotation
-uth <- system.file("extdata", "AT3G02468.gtf", package = "RiboPlotR", mustWork = TRUE) #uORF annotation
+# Load example datasets
+agtf <- system.file("extdata", "TAIR10.29_part.gtf", package = "RiboPlotR", mustWork = TRUE) #Annotation
+ugtf <- system.file("extdata", "AT3G02468.gtf", package = "RiboPlotR", mustWork = TRUE) #uORF annotation
 RRNA <- system.file("extdata", "Root_test_PE.bam", package = "RiboPlotR", mustWork = TRUE) #Root RNA-seq data
 SRNA <- system.file("extdata", "Shoot_test_PE.bam", package = "RiboPlotR", mustWork = TRUE) #Shoot RNA-seq data
 RRibo <- system.file("extdata", "riboRoot.bed", package = "RiboPlotR", mustWork = TRUE) #Root Ribo-seq data
 SRibo <- system.file("extdata", "riboShoot.bed", package = "RiboPlotR", mustWork = TRUE) #Shoot Ribo-seq data
 
-# Run gene.structure function to load gtf
-gene.structure(annotation=ath, format="gtf",dataSource="Araport",organism="Arabidopsis thaliana")
+# Run gene.structure function to load gtf for annotated protein coding genes
+gene.structure(annotation=agtf, format="gtf",dataSource="Araport",organism="Arabidopsis thaliana")
 
 # Run uorf.structure to load uORF gtf
-uorf.structure(uorf_annotation=uth, format="gtf",dataSource="Araport",organism="Arabidopsis thaliana")
+uorf.structure(uorf_annotation=ugtf, format="gtf",dataSource="Araport",organism="Arabidopsis thaliana")
 
 # Run rna_bam.ribo to load root and shoot RNA-seq and Ribo-seq data sets
-rna_bam.ribo(rna1=RRNA,rna2=SRNA,ribo1=RRibo,ribo2=SRibo,
+# Here root is the first dataset and shoot is the second dataset 
+
+rna_bam.ribo(Ribo1=RRibo,
+             RNAseqBam1=RRNA,
              RNAlab1="RNA count",
-             RNAlab2="RNA count",
              Ribolab1="Ribo count",
-             Ribolab2="Ribo count",
              S_NAME1="Root",
+             Ribo2=SRibo,
+             RNAseqBam2=SRNA,
+             RNAlab2="RNA count",
+             Ribolab2="Ribo count",
              S_NAME2="Shoot",
              RNAseqBamPaired="paired")
 
-PLOTc2("AT4G21910",isoform=2)
+#Plot AT4G21910 
+PLOTc2("AT4G21910") #default using first isoform. The isoform used for plotting is marked in bold.
+```
+![AT4G21910](https://github.com/hsinyenwu/RiboPlotR/blob/master/image/AT4G21910.png)  
 
+```R
+PLOTc2("AT4G21910",isoform=2)
+```
+![AT4G21910.2](https://github.com/hsinyenwu/RiboPlotR/blob/master/image/AT4G21910_isoform2.png)
+
+```R
+#Plot Root data (PLOTc uses the first RNA-seq and Ribo-seq dataset by default. Here the first dataset is the Root dataset.) 
 PLOTc("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC")
-PLOTc2("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC",isoform=3)
 ```
 
+![SAMDC_uORF](https://github.com/hsinyenwu/RiboPlotR/blob/master/image/SAMDC_uORF.png)
 
-### Citation
-Visualizing the periodic Ribo-seq reads with RiboPlotR
-https://www.biorxiv.org/content/10.1101/694646v1
-### Session Info
+```R
+#Plot Shoot data (Here is an example how to plot the second dataset using PLOTc)
+PLOTc("AT3G02470",uORF="AT3G02468",NAME=" SAMDC",RNAbam1 = RNAseqBam2, ribo1 = Ribo2, SAMPLE1 = "Shoot")
+```
+![SAMDC_uORF](https://github.com/hsinyenwu/RiboPlotR/blob/master/image/SAMDC_shoot.png)
+
+```R
+#Plot both dataset wiht PLOTC2
+PLOTc2("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC",isoform=3)
+```
+![SAMDC_uORF](https://github.com/hsinyenwu/RiboPlotR/blob/master/image/SAMDC_PLOTt2.png)
+
+```R
+PLOTt2("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC",isoform=3)
+```
+![SAMDC_uORF](https://github.com/hsinyenwu/RiboPlotR/blob/master/image/SAMDC_PLOTt2.png)
+
+```R
+PLOTt("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC",isoform=3)
+```
+![SAMDC_uORF](https://github.com/hsinyenwu/RiboPlotR/blob/master/image/SAMDC_PLOTt_Root.png)
+
+### Citation:
+Visualizing the periodic Ribo-seq reads with RiboPlotR  
+https://www.biorxiv.org/content/10.1101/694646v1  
+
+### Session Info:
 ```R
 sessionInfo()
 R version 3.6.0 (2019-04-26)
