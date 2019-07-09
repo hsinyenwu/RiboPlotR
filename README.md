@@ -5,6 +5,8 @@ RiboPlotR is a R package for visualizing RNA-seq/Ribo-seq reads in the context o
 
 RiboPlotR separately plots each isoform of a given gene. Only one isoform is plotted at a time, and the default is to plot isoform 1. For each isoform, the same RNA-seq and Ribo-seq reads are used for plotting; the only difference is the expected coding region for the Ribo-seq reads, which is indicated by a black dashed line (expected translation start) and a grey dashed line (expected translation stop). Inside the expected coding region, Ribo-seq P-sites that are mapped in the expected frame, the +1 frame, and the +2 frame are presented using red, blue and green lines, respectively. Ribo-seq P-sites that are outside the expected coding region are shown in grey. The x-axis below the gene models indicates the genomic coordinates, while the y-axis indicates the Ribo-seq P-site counts. When an isoform is translated, the majority of P-sites should cover the expected coding sequences and are shown in red. If two isoforms cover a different coding region at the 3' ends, the two plots will have different color schemes at the 3' end. This design allows users to quickly see if a plotted isoform is being actively translated (see examples below).  
 
+### Install RiboPlotR and its required packages: 
+
 Install required packages.
 ```R
 if (!requireNamespace("BiocManager", quietly = TRUE))
@@ -26,7 +28,7 @@ install_github("hsinyenwu/RiboPlotR")
 3. Run rna_bam.ribo(); load the mapped and coordinate-sorted RNA-seq bam file and the ribo-seq P-site position file.  
 4. Use one of the four functions below, enter gene name and isoform number to plot the translation of the isoform.  
 
-### Files required for RiboPlotR
+### Files required for RiboPlotR:
 
 RiboPlotR requires the following input files: 
 1. A gtf or gff3 file for transcriptome annotation, which should be recognizable with the GenomicFeatures package
@@ -52,7 +54,7 @@ PLOTt: plots RNA-seq and Ribo-seq separately in two panels (plot two)
 PLOTc2: plots RNA-seq and Ribo-seq in one panel for two conditions  
 PLOTt2: plots RNA-seq and Ribo-seq separately for two conditions  
 
-### Examples
+### Examples:
 ```R
 # Load RiboPlotR and essential packages
 library(RiboPlotR)
@@ -128,11 +130,11 @@ PLOTt("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC",isoform=3)
 ```
 ![SAMDC_uORF](https://github.com/hsinyenwu/RiboPlotR/blob/master/image/SAMDC_PLOTt_Root.png)
 
-### Citation
+### Citation:
 Visualizing the periodic Ribo-seq reads with RiboPlotR  
 https://www.biorxiv.org/content/10.1101/694646v1  
 
-### Session Info
+### Session Info:
 ```R
 sessionInfo()
 R version 3.6.0 (2019-04-26)
