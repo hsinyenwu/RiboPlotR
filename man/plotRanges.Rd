@@ -4,7 +4,7 @@
 \alias{plotRanges}
 \title{plotRanges is a function to plot GRanges}
 \usage{
-plotRanges(isoform, uORF = NULL, shortest3UTR, ybottom = 0,
+plotRanges(isoform, uORF = NULL, shortest3UTR, ybottom,
   main = deparse(substitute(x)), colCDS = "black", col3 = "white",
   col5 = "lightgrey")
 }
@@ -15,7 +15,7 @@ plotRanges(isoform, uORF = NULL, shortest3UTR, ybottom = 0,
 
 \item{shortest3UTR}{The plotGeneModel will provide this information automatically. Providing the shortest 3UTR range allows this function to decide how to plot the shape of the 3'UTR.}
 
-\item{ybottom}{The ylim for this function.}
+\item{ybottom}{The lower ylim for this function.}
 
 \item{main}{Title for the plot. The gene name is the default.}
 

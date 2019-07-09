@@ -120,14 +120,15 @@ rna_bam.ribo <- function(Ribo1,Ribo2,RNAseqBam1,RNAseqBam2,RNAlab1="RNA_sample1"
 #' @param isoform Integer, the number of isoform
 #' @param uORF The name of the uORF
 #' @param shortest3UTR The plotGeneModel will provide this information automatically. Providing the shortest 3UTR range allows this function to decide how to plot the shape of the 3'UTR.
-#' @param ybottom The ylim for this function.
+#' @param ybottom The lower ylim for this function.
 #' @param main Title for the plot. The gene name is the default.
 #' @param colCDS Color for CDS
 #' @param col3 Color for 3'UTR
 #' @param col5 Color for 5'UTR
 #' @return plot each isoform
 
-plotRanges <- function(isoform,uORF=NULL,shortest3UTR,ybottom = 0,main = deparse(substitute(x)),colCDS = "black",col3="white",col5="lightgrey") {
+plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(substitute(x)),colCDS = "black",col3="white",col5="lightgrey") {
+
   if(isoform %in% names(cdsByTx)) {
     height <- 0.1
     xlim=ranges(unlist(exonsByTx[isoform]))
@@ -142,16 +143,29 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR,ybottom = 0,main = deparse
     # plot lines between exons to represent introns
     if (length(unlist(exonsByTx[isoform]))>1) {
       GAPS <- gaps(unlist(exonsByTx[isoform]),start=NA)
+      # print(GAPS)
+      # print("****")
+      # print(start(GAPS))
+      # print("****")
+      # print(height/2)
+      # print(ybottom)
+      # print("****")
+      # print(start(GAPS)+width(ranges(GAPS))/2)
+      # print("****")
+      # print(y1 = ybottom+height)
+      # print("****")
       segments(x0 = start(GAPS),
                y0 = ybottom+height/2,
                x1 = start(GAPS)+width(ranges(GAPS))/2,
                y1 = ybottom+height,
                col = "black",lwd=1)
+      
       segments(x0 = start(GAPS)+width(ranges(GAPS))/2,
                y0 = ybottom+height,
                x1 = end(GAPS),
                y1 = ybottom+height/2,
                col = "black",lwd=1)
+      
     }
     # check strand info
     Frame <- ifelse(as.character(runValue(strand(exonsByTx[isoform])))=="+", firstInFramePSitePerExonPositive(isoform), firstInFramePSitePerExonNegative(isoform))
@@ -279,10 +293,11 @@ plotGeneModel <- function(gene,uORF,Extend=Extend,p.isoform=isoform){
   plot.new()
   yAxis <- (isoforms*0.3+0.1)
   plot.window(genelim,c(0,yAxis))
-  tx_num <- sort(substr(unlist(txByGene[gene])$tx_name,11,nchar(unlist(txByGene[gene])$tx_name)))
+  tx_name_start_pos <- nchar(gene)+2 #find the position of the tx name start
+  tx_num <- sort(substr(unlist(txByGene[gene])$tx_name,tx_name_start_pos,nchar(unlist(txByGene[gene])$tx_name)))
   # tx_fac <- as.numeric(as.factor(tx_num))
   for (i in sort(unlist(txByGene[gene])$tx_name)) {
-    k=as.numeric(substr(i,11,nchar(i)))
+    k=as.numeric(substr(i,tx_name_start_pos,nchar(i)))
     k2=which(tx_num==k)
     if (i %in% names(threeUTR)) {
       shortest3UTR <- min(sapply(isoforms.w.3UTR, function(j) width(tail(unlist(threeUTR[j]),1))))
@@ -515,7 +530,7 @@ firstInFramePSitePerExonNegative <- function(x){
 PLOTt <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1=S_NAME1,CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="") {
   transcript_id <- unlist(txByGene[YFG])$tx_name
   #Do not set first transcript because some genes do not have isoform 1
-  suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,11))[1])
+  suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,nchar(YFG)+2)))
   if(missing(isoform)) {isoform <- "1"}
   stopifnot(paste0(YFG,".",isoform,sep = "") %in% names(cdsByTx))
   par(mfrow=c(3,1),mar=c(0.2,0.3,0.2,0.2),oma=c(3,4,3,2))
@@ -583,7 +598,7 @@ PLOTt <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1=S_NAM
 PLOTt2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ribo2,ylab1=Ribolab1,ylab2=Ribolab2,SAMPLE1 = S_NAME1, SAMPLE2 = S_NAME2,CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="") {
   transcript_id <- unlist(txByGene[YFG])$tx_name
   #Do not set first transcript because some genes do not have isoform 1
-  suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,11))[1])
+  suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,nchar(YFG)+2)))
   if(missing(isoform)) {isoform <- "1"}
   stopifnot(paste0(YFG,".",isoform,sep = "") %in% names(cdsByTx))
   
@@ -670,7 +685,7 @@ PLOTt2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ri
 PLOTc <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_NAME1,CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="") {
   transcript_id <- unlist(txByGene[YFG])$tx_name
   #Do not set first transcript because some genes do not have isoform 1
-  suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,11))[1])
+  suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,nchar(YFG)+2)))
   if(missing(isoform)) {isoform <- "1"}
   stopifnot(paste0(YFG,".",isoform,sep = "") %in% names(cdsByTx))
   par(mfrow=c(2,1),mar=c(0.2,0.3,0.2,0.2),oma=c(3,4,3,4))
@@ -738,7 +753,7 @@ PLOTc <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_N
 PLOTc2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ribo2,SAMPLE1 = S_NAME1, SAMPLE2 = S_NAME2, CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="") {
   transcript_id <- unlist(txByGene[YFG])$tx_name
   #Do not set first transcript because some genes do not have isoform 1
-  suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,11))[1])
+  suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,nchar(YFG)+2)))
   if(missing(isoform)) {isoform <- "1"}
   stopifnot(paste0(YFG,".",isoform,sep = "") %in% names(cdsByTx))
   par(mfrow=c(3,1),mar=c(0.2,0.3,0.2,0.2),oma=c(3,4,3,4))

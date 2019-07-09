@@ -4,7 +4,7 @@
 \alias{PLOTt}
 \title{PLOTt, plot RNA-seq and ribo-seq separately.}
 \usage{
-PLOTt(YFG, RNAbam1 = RNAseqBam1, ribo1 = riboR1, ylab1 = Ribolab1,
+PLOTt(YFG, RNAbam1 = RNAseqBam1, ribo1 = Ribo1, ylab1 = Ribolab1,
   SAMPLE1 = S_NAME1, CDSonly = FALSE, Extend = 50, isoform,
   uORF = NULL, NAME = "")
 }

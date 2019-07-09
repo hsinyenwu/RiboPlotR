@@ -4,7 +4,7 @@
 \alias{PLOTc}
 \title{PLOTc plot RNA-seq and ribo-seq together for one datasets.}
 \usage{
-PLOTc(YFG, RNAbam1 = RNAseqBam1, ribo1 = riboR1, ylab1 = Ribolab1,
+PLOTc(YFG, RNAbam1 = RNAseqBam1, ribo1 = Ribo1, ylab1 = Ribolab1,
   SAMPLE1 = S_NAME1, CDSonly = FALSE, Extend = 50, isoform,
   uORF = NULL, NAME = "")
 }

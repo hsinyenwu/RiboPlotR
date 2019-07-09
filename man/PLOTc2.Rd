@@ -5,7 +5,7 @@
 \title{PLOTc2}
 \usage{
 PLOTc2(YFG, RNAbam1 = RNAseqBam1, RNAbam2 = RNAseqBam2,
-  ribo1 = riboR1, ribo2 = riboR2, SAMPLE1 = S_NAME1,
+  ribo1 = Ribo1, ribo2 = Ribo2, SAMPLE1 = S_NAME1,
   SAMPLE2 = S_NAME2, CDSonly = FALSE, Extend = 50, isoform,
   uORF = NULL, NAME = "")
 }
