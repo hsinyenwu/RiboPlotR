@@ -7,6 +7,7 @@ RiboPlotR plots each isoform of a given gene separately. Only one isoform is plo
 
 ![RiboPlotR_style](https://github.com/hsinyenwu/RiboPlotR/blob/master/image/Screen%20Shot%202019-07-10%20at%204.56.27%20PM.png)
 
+## Run RiboPlotR
 ### Install RiboPlotR and its required packages: 
 
 Install required packages.
