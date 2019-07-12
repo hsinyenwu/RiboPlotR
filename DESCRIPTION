@@ -1,7 +1,7 @@
 Package: RiboPlotR
 Type: Package
 Title: Plot Periodicity of Ribosome Profiling Data
-Version: 0.1.0
+Version: 0.1.1
 Author: Larry Wu <larrywu@msu.edu>; Polly Hsu <pollyhsu@msu.edu>
 Maintainer: Larry Wu <larrywu@msu.edu>
 Description: Plotting the 3 nucleotide periodicity of the ribosome profiling (Ribo-seq) data together with RNA-seq.
