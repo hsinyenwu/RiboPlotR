@@ -143,17 +143,6 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(s
     # plot lines between exons to represent introns
     if (length(unlist(exonsByTx[isoform]))>1) {
       GAPS <- gaps(unlist(exonsByTx[isoform]),start=NA)
-      # print(GAPS)
-      # print("****")
-      # print(start(GAPS))
-      # print("****")
-      # print(height/2)
-      # print(ybottom)
-      # print("****")
-      # print(start(GAPS)+width(ranges(GAPS))/2)
-      # print("****")
-      # print(y1 = ybottom+height)
-      # print("****")
       segments(x0 = start(GAPS),
                y0 = ybottom+height/2,
                x1 = start(GAPS)+width(ranges(GAPS))/2,
