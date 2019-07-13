@@ -128,17 +128,14 @@ rna_bam.ribo <- function(Ribo1,Ribo2,RNAseqBam1,RNAseqBam2,RNAlab1="RNA_sample1"
 #' @return plot each isoform
 
 plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(substitute(x)),colCDS = "black",col3="white",col5="lightgrey") {
-
   if(isoform %in% names(cdsByTx)) {
     height <- 0.1
     xlim=ranges(unlist(exonsByTx[isoform]))
     xlimCds=ranges(unlist(cdsByTx[isoform]))
-    
     # plot 5'UTR
     if (isoform %in% names(fiveUTR)) {
       xlim5=ranges(unlist(fiveUTR[isoform]))
       rect(start(xlim5), ybottom, end(xlim5), ybottom + height, col = col5, border = "black")
-      # text(x=xlim5,y=ybottom,labels=isoform)
     }
     # plot lines between exons to represent introns
     if (length(unlist(exonsByTx[isoform]))>1) {
@@ -154,7 +151,6 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(s
                x1 = end(GAPS),
                y1 = ybottom+height/2,
                col = "black",lwd=1)
-      
     }
     # check strand info
     Frame <- ifelse(as.character(runValue(strand(exonsByTx[isoform])))=="+", firstInFramePSitePerExonPositive(isoform), firstInFramePSitePerExonNegative(isoform))
@@ -168,8 +164,6 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(s
         rect(start(xlim_uORF), ybottom, end(xlim_uORF), ybottom + height, col ="yellow" , border = "black")
       }
     }
-
-    ########################
     # Plot 3'UTR with an arrow shap
     if (isoform %in% names(threeUTR)) {
       xlim3=ranges(sort(unlist(threeUTR[isoform])))
@@ -207,7 +201,51 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(s
 }
 
 
-#
+#plotGeneModel combines both plotRanges and p_site_plot_all functions
+#' @title plot plotGeneModel
+#' @description plotGeneModel combines both plotRanges and p_site_plot_all functions
+#' @param gene gene ID
+#' @param uORF uORF ID
+#' @param Extend number of nucleotides to extend on both side of the gene model
+#' @param p.isoform isoform that is been plotting at the PLOTc, PLOTt,PLOTc2 or PLOTt2 function
+#' @return plot the gene model
+
+plotGeneModel <- function(gene,uORF,Extend=Extend,p.isoform=isoform){
+  isoforms <- length(unlist(txByGene[gene]))
+  generanges <- ranges(unlist(exonsByGene[gene]))
+  SUW <- sum(width(generanges))
+  xlimg= min(start(generanges))-0.05
+  genelim <- c(min(start(generanges))-Extend, max(end(generanges))+Extend)
+  isoforms.w.3UTR <- unlist(txByGene[gene])$tx_name[which(unlist(txByGene[gene])$tx_name %in% names(threeUTR))]
+  plot.new()
+  yAxis <- (isoforms*0.3+0.1)
+  plot.window(genelim,c(0,yAxis))
+  tx_name_start_pos <- nchar(gene)+2 #find the position of the tx name start
+  tx_num <- sort(substr(unlist(txByGene[gene])$tx_name,tx_name_start_pos,nchar(unlist(txByGene[gene])$tx_name)))
+  # tx_fac <- as.numeric(as.factor(tx_num))
+  for (i in sort(unlist(txByGene[gene])$tx_name)) {
+    k=as.numeric(substr(i,tx_name_start_pos,nchar(i)))
+    k2=which(tx_num==k)
+    if (i %in% names(threeUTR)) {
+      shortest3UTR <- min(sapply(isoforms.w.3UTR, function(j) width(tail(unlist(threeUTR[j]),1))))
+      plotRanges(isoform=i,uORF,shortest3UTR,ybottom=(yAxis-0.28*k2)) #removed
+      if (p.isoform==k){
+        text(x=min(start(generanges))-Extend-0.1, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.4,font=2)
+      } else {
+        text(x=min(start(generanges))-Extend-0.1, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.2)
+      }
+    }
+    else {
+      plotRanges(isoform=i,uORF,ybottom=(yAxis-0.28*k2))
+      if (p.isoform==k){
+        text(x=min(start(generanges))-Extend-0.1, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.4,font=2)
+      } else {
+        text(x=min(start(generanges))-Extend-0.1, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.2)
+      }
+    }
+  }
+}
+
 #' @title Identify highest value of riboseq reads in a give gene.
 #' @description Identify highest value of riboseq reads in a give gene. This is for defining the max Y-axis values.
 #' @param GeneName Name of gene used
@@ -258,53 +296,6 @@ p_site_Y_max <- function(GeneName,isoform,ribo,CDSonly=FALSE,Extend=Extend) {
   }
   else {
     stop("Input transcript is not a coding gene in gtf/gff file.")
-  }
-}
-
-#plotGeneModel combines both plotRanges and p_site_plot_all functions
-
-#' @title plot plotGeneModel
-#' @description plotGeneModel combines both plotRanges and p_site_plot_all functions
-#' @param gene gene ID
-#' @param uORF uORF ID
-#' @param Extend number of nucleotides to extend on both side of the gene model
-#' @param p.isoform isoform that is been plotting at the PLOTc, PLOTt,PLOTc2 or PLOTt2 function
-#' @return plot the gene model
-
-plotGeneModel <- function(gene,uORF,Extend=Extend,p.isoform=isoform){
-  isoforms <- length(unlist(txByGene[gene]))
-  generanges <- ranges(unlist(exonsByGene[gene]))
-  SUW <- sum(width(generanges))
-  xlimg= min(start(generanges))-0.05
-  # genelim <- c(min(start(generanges)), max(end(generanges)))
-  genelim <- c(min(start(generanges))-Extend, max(end(generanges))+Extend)
-  isoforms.w.3UTR <- unlist(txByGene[gene])$tx_name[which(unlist(txByGene[gene])$tx_name %in% names(threeUTR))]
-  plot.new()
-  yAxis <- (isoforms*0.3+0.1)
-  plot.window(genelim,c(0,yAxis))
-  tx_name_start_pos <- nchar(gene)+2 #find the position of the tx name start
-  tx_num <- sort(substr(unlist(txByGene[gene])$tx_name,tx_name_start_pos,nchar(unlist(txByGene[gene])$tx_name)))
-  # tx_fac <- as.numeric(as.factor(tx_num))
-  for (i in sort(unlist(txByGene[gene])$tx_name)) {
-    k=as.numeric(substr(i,tx_name_start_pos,nchar(i)))
-    k2=which(tx_num==k)
-    if (i %in% names(threeUTR)) {
-      shortest3UTR <- min(sapply(isoforms.w.3UTR, function(j) width(tail(unlist(threeUTR[j]),1))))
-      plotRanges(isoform=i,uORF,shortest3UTR,ybottom=(yAxis-0.28*k2)) #removed
-      if (p.isoform==k){
-        text(x=min(start(generanges))-Extend-0.1, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.4,font=2)
-      } else {
-        text(x=min(start(generanges))-Extend-0.1, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.2)
-      }
-    }
-    else {
-      plotRanges(isoform=i,uORF,ybottom=(yAxis-0.28*k2))
-      if (p.isoform==k){
-        text(x=min(start(generanges))-Extend-0.1, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.4,font=2)
-      } else {
-        text(x=min(start(generanges))-Extend-0.1, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.2)
-      }
-    }
   }
 }
 
