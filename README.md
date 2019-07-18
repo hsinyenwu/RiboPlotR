@@ -5,7 +5,7 @@ RiboPlotR is a R package for visualizing RNA-seq/Ribo-seq reads in the context o
 
 RiboPlotR plots each isoform of a given gene separately. Only one isoform is plotted at a time, and the default is to plot isoform 1. For each isoform, the same RNA-seq and Ribo-seq reads are used for plotting; the only difference is the expected coding region for the Ribo-seq reads, which is indicated by a black dashed line (expected translation start) and a grey dashed line (expected translation stop). Inside the expected coding region, Ribo-seq P-sites that are mapped in the expected frame, the +1 frame, and the +2 frame are presented using red, blue and green lines, respectively. Ribo-seq P-sites that are outside the expected coding region are shown in grey. The x-axis below the gene models indicates the genomic coordinates, while the y-axis indicates the Ribo-seq P-site counts. When an isoform is translated, the majority of P-sites should cover the expected coding sequences and are shown in red. If two isoforms cover a different coding region at the 3' ends, the two plots will have different color schemes at the 3' end. This design allows users to quickly see if a plotted isoform is being actively translated (see style figure and examples below).  
 
-![RiboPlotR_style](https://github.com/hsinyenwu/RiboPlotR/blob/master/image/Screen%20Shot%202019-07-10%20at%204.56.27%20PM.png)
+![RiboPlotR_style](https://github.com/hsinyenwu/RiboPlotR/blob/master/image/Plotting-style.png)
 
 ## Run RiboPlotR
 ### Install RiboPlotR and its required packages: 
