@@ -117,7 +117,8 @@ PLOTc("AT3G02470",uORF="AT3G02468",NAME=" SAMDC",RNAbam1 = RNAseqBam2, ribo1 = R
 #Plot both dataset wiht PLOTC2
 PLOTc2("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC",isoform=3)
 ```
-![SAMDC_uORF](https://github.com/hsinyenwu/RiboPlotR/blob/master/image/SAMDC_PLOTt2.png)
+<img src="https://github.com/hsinyenwu/RiboPlotR/blob/master/image/SAMDC_root_uORF_PLOTc2.png" height="550" width="520">
+
 
 ```R
 PLOTt2("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC",isoform=3)
