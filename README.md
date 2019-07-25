@@ -106,7 +106,8 @@ PLOTc2("AT4G21910",isoform=2)
 PLOTc("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC")
 ```
 
-![SAMDC_uORF](https://github.com/hsinyenwu/RiboPlotR/blob/master/image/SAMDC_root_uORF_PLOTc.png height="5" width="4)
+##![SAMDC_uORF](https://github.com/hsinyenwu/RiboPlotR/blob/master/image/SAMDC_root_uORF_PLOTc.png height="5" width="4)
+<img src="https://github.com/hsinyenwu/RiboPlotR/blob/master/image/SAMDC_root_uORF_PLOTc.png" height="50" width="48">
 
 ```R
 #Plot Shoot data (Here is an example how to plot the second dataset using PLOTc)
