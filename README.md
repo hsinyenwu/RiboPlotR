@@ -61,9 +61,6 @@ PLOTt2: plots RNA-seq and Ribo-seq separately for two conditions
 ```R
 # Load RiboPlotR and essential packages
 library(RiboPlotR)
-library(GenomicRanges)
-library(GenomicFeatures)
-library(GenomicAlignments)
 
 # Load example datasets
 agtf <- system.file("extdata", "TAIR10.29_part.gtf", package = "RiboPlotR", mustWork = TRUE) #Annotation
