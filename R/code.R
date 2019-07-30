@@ -265,7 +265,8 @@ p_site_Y_max <- function(GeneName,isoform,ribo,CDSonly=FALSE,Extend=Extend) {
     #find ranges of exons
     Exon <- exonsByGene[GeneName,]
     #Extract chromosome number from CDS object
-    chr=as.numeric(as.character(seqnames(unlist(CDS))))[1]
+    # chr=as.numeric(as.character(seqnames(unlist(CDS))))[1]
+    chr=as.character(seqnames(unlist(CDS)))[1]
     #Extract strand information from CDS object
     txStrand=as.character(strand(unlist(CDS)))[1]
     #Extract the CDS ranges
@@ -318,7 +319,8 @@ p_site_plot_p <- function(GeneName,isoform,ribo,CDSonly=FALSE,Extend=Extend,YLIM
     #find ranges of exons
     Exon <- exonsByGene[GeneName,]
     #Extract chromosome number from CDS object
-    chr=as.numeric(as.character(seqnames(unlist(CDS))))[1]
+    # chr=as.numeric(as.character(seqnames(unlist(CDS))))[1]
+    chr=as.character(seqnames(unlist(CDS)))[1]
     #Extract strand information from CDS object
     txStrand=as.character(strand(unlist(CDS)))[1]
     #Extract the CDS ranges
@@ -399,7 +401,8 @@ p_site_plot_p2 <- function(gene,uORF,uORF.isoform=1,ribo,CDSonly=TRUE,Extend=Ext
     #find ranges of exons
     Exon <- exonsByGene_u[uORF,]
     #Extract chromosome number from CDS object
-    chr=as.numeric(as.character(seqnames(unlist(CDS))))[1]
+    # chr=as.numeric(as.character(seqnames(unlist(CDS))))[1]
+    chr=as.character(seqnames(unlist(CDS)))[1]
     #Extract strand information from CDS object
     txStrand=as.character(strand(unlist(CDS)))[1]
     #Extract the CDS ranges
@@ -552,7 +555,7 @@ PLOTt <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1=S_NAM
     }
   #Plot gene model
   plotGeneModel(YFG,Extend=Extend,uORF=uORF,p.isoform=isoform)
-  mtext(substitute(paste(italic(YFG),NAME)),side=3,line=0.4, cex=1.2, col="black", outer=TRUE)
+  mtext(paste(YFG,"  ",NAME),side=3,line=0.4, cex=1.2, col="black", outer=TRUE)
 }
 
 #PLOTt2, plot 2 sets of RNA-seq and ribo-seq for comparison. It also contains a plot with transcript models.
@@ -644,7 +647,7 @@ PLOTt2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ri
   legend("topright",legend=Ribolab1,bty="n",cex=1.2)
   #Plot gene model
   plotGeneModel(YFG,Extend=Extend,uORF=uORF,p.isoform=isoform)
-  mtext(substitute(paste(italic(YFG),NAME)),side=3,line=0.4, cex=1.2, col="black", outer=TRUE,font=3)
+  mtext(paste(YFG,"  ",NAME),side=3,line=0.4, cex=1.2, col="black", outer=TRUE,font=3)
 }
 
 #' @title PLOTc plot RNA-seq and ribo-seq together for one datasets.
@@ -709,7 +712,7 @@ PLOTc <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_N
   mtext(Ribolab1, side = 4, line = 2)
   #Plot gene model
   plotGeneModel(YFG,Extend=Extend,uORF=uORF,p.isoform=isoform)
-  mtext(substitute(paste(italic(YFG),NAME)),side=3,line=0.4, cex=1.2, col="black", outer=TRUE,font=3)
+  mtext(paste(YFG,"  ",NAME),side=3,line=0.4, cex=1.2, col="black", outer=TRUE,font=3)
 }
 
 #PLOTc2, plot 2 sets of RNA-seq and ribo-seq for comparison. It also contains a plot with transcript models.
@@ -796,7 +799,7 @@ PLOTc2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ri
   mtext(RNAlab1, side=2, outer=T, at=0.64,line =2.5,cex=1.2)
   #Plot gene model
   plotGeneModel(YFG,Extend=Extend,uORF=uORF,p.isoform=isoform)
-  mtext(substitute(paste(italic(YFG),NAME)),side=3,line=0.4, cex=1.2, col="black", outer=TRUE,font=3)
+  mtext(paste(YFG,"  ",NAME),side=3,line=0.4, cex=1.2, col="black", outer=TRUE,font=3)
 }
 
 
