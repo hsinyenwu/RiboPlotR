@@ -825,9 +825,9 @@ p_site_plot_genome <- function(GeneName,ribo,Extend=Extend,YLIM) {
   Tx <- txByGene[names(txByGene)==GeneName,]
   # find ranges of exons
   Exon <- exonsByGene[names(exonsByGene)==GeneName,]
-  # Extract chromosome number from CDS object
+  # Extract chromosome number from Tx object
   chr=as.numeric(seqnames(unlist(Tx)))[1]
-  # Extract strand information from CDS object
+  # Extract strand information from Tx object
   txStrand <- as.character(strand(unlist(Tx)))[1]
   
   # Extract most left position from the Exon object
@@ -888,9 +888,7 @@ p_site_plot_genome <- function(GeneName,ribo,Extend=Extend,YLIM) {
 PLOTg <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_NAME1,CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="") {
   transcript_id <- unlist(txByGene[YFG])$tx_name
   #Do not set first transcript because some genes do not have isoform 1
-  suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,nchar(YFG)+2)))
   if(missing(isoform)) {isoform <- "1"}
-  # stopifnot(paste0(YFG,".",isoform,sep = "") %in% names(cdsByTx))
   par(mfrow=c(2,1),mar=c(0.2,0.3,0.2,0.2),oma=c(3,4,3,4))
   chr <- as.character(seqnames(exonsByGene[YFG])[[1]])[1]
   generanges <- ranges(unlist(exonsByGene[YFG]))
