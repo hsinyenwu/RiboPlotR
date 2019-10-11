@@ -91,42 +91,37 @@ uorf.structure <- function(uorf_annotation,format="gtf",dataSource="",organism="
 #' \dontrun{
 #' uorf.structure(uorf_annotation="/Volumes/BACKUP/project2/TAIR10.29.gtf",dataSource="Araport",organism="Arabidopsis thaliana")
 #' }
-rna_bam.ribo <- function(Ribo1,Ribo2,RNAseqBam1,RNAseqBam2=NULL,RNAlab1="RNA_sample1",RNAlab2=NULL,RNAseqBamPaired="paired",Ribolab1="Ribo_sample1",Ribolab2=NULL,S_NAME1="sample1",S_NAME2=NULL,RNAbackground="#FEFEAE"){
+rna_bam.ribo <- function(Ribo1,Ribo2,RNAseqBam1,RNAseqBam2,RNAlab1="RNA_sample1",RNAlab2="RNA_sample2",RNAseqBamPaired="paired",Ribolab1="Ribo_sample1",Ribolab2="Ribo_sample2",S_NAME1="sample1",S_NAME2="sample2",RNAbackground="#FEFEAE"){
   #get path to RNASeq Bam file
   RNAseqBam1 <- RNAseqBam1
-  if (is.null(RNAseqBam2)==FALSE){
-    RNAseqBam2 <- RNAseqBam2
-  }
   #get ribo-seq all p-site information
   Ribo1 <- read.delim(file=Ribo1,header=F,stringsAsFactors=F,sep="\t")
   colnames(Ribo1) <- c("count", "chr", "position", "strand")
-  if (is.null(Ribo2)==FALSE){
-    Ribo2 <- read.delim(file=Ribo2,header=F,stringsAsFactors=F,sep="\t")
-    colnames(Ribo2) <- c("count", "chr", "position", "strand")
-  }
   assign("RNAseqBamPaired", RNAseqBamPaired, envir = .GlobalEnv)
   assign("RNAseqBam1", RNAseqBam1, envir = .GlobalEnv)
   assign("Ribo1", Ribo1, envir = .GlobalEnv)
   assign("RNAlab1", RNAlab1, envir = .GlobalEnv)
   assign("Ribolab1", Ribolab1, envir = .GlobalEnv)
   assign("S_NAME1", S_NAME1, envir = .GlobalEnv)
+  assign("RNAbackground", RNAbackground, envir = .GlobalEnv)
   
-  if (is.null(RNAseqBam2)==FALSE){
+  #Get the second set of data, if available
+  if (!missing(RNAseqBam2)){
     assign("RNAseqBam2", RNAseqBam2, envir = .GlobalEnv)
   }
-  if (is.null(Ribo2)==FALSE){
-    assign("Ribo2", Ribo2, envir = .GlobalEnv)
+  if (!missing(Ribo2)){
+    Ribo2 <- read.delim(file=Ribo2,header=F,stringsAsFactors=F,sep="\t")
+    colnames(Ribo2) <- c("count", "chr", "position", "strand")
   }
-  if (is.null(RNAlab2)==FALSE){
+  if (!missing(RNAlab2)){
     assign("RNAlab2", RNAlab2, envir = .GlobalEnv)
   }
-  if (is.null(Ribolab2)==FALSE){
+  if (!missing(Ribolab2)){
     assign("Ribolab2", Ribolab2, envir = .GlobalEnv)
   }
-  if (is.null(S_NAME2)==FALSE){
+  if (!missing(S_NAME2)){
     assign("S_NAME2", S_NAME2, envir = .GlobalEnv)
   }
-  assign("RNAbackground", RNAbackground, envir = .GlobalEnv)
 }
 
 
