@@ -853,14 +853,14 @@ p_site_plot_genome <- function(GeneName,ribo,Extend=Extend,YLIM) {
     
   }
   
-  RiboRslt <- ribo[ribo[,2]==chr & ribo[,3] > txLeft & ribo[,3] < txRight & ribo$strand==txStrand,]
+  RiboRslt <- ribo[ribo[,2]==chr & ribo[,3] > txLeft-Extend & ribo[,3] < txRight+Extend & ribo$strand==txStrand,]
   
   RiboRslt$frame <- factor(ifelse(RiboRslt$position%in%s1,0,ifelse(RiboRslt$position%in%s2,1,ifelse(RiboRslt$position%in%s3,2,3))),levels=c(0,1,2,3))
   
   YLIM <- c(0,max(c(0,RiboRslt$count)))
   
   plot(x=RiboRslt$position,y=RiboRslt$count,type="h",ylab="Count",
-       xlim=c(txLeft,txRight),ylim=YLIM,
+       xlim=c(txLeft-Extend,txRight+Extend),ylim=YLIM,
        col=c("red","#3366FF","#009900","darkgrey")[RiboRslt$frame],
        lwd=1,xaxt = "n")
   axis(side=1, labels=FALSE, tck = -0.01)
@@ -925,7 +925,7 @@ PLOTg <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_N
   lines(x=c(1,length(Gtx)),y=c(0,0),col="white",lwd=2)
   legend("topleft",SAMPLE1,bty="n",cex=1.2,text.font=2)
   par(new = T)
-  p_site_plot_genome(GeneName=YFG,ribo=ribo1)
+  p_site_plot_genome(GeneName=YFG,ribo=ribo1,Extend=Extend)
   par(new = TRUE)
   if (!is.null(uORF)) {p_site_plot_p2(gene=YFG,uORF=uORF,CDSonly=TRUE,uORF.isoform=1,ribo1,Extend=Extend,YLIM=max_P)}
   axis(side = 4)
