@@ -94,7 +94,7 @@ uorf.structure <- function(uorf_annotation,format="gtf",dataSource="",organism="
 rna_bam.ribo <- function(Ribo1,Ribo2,RNAseqBam1,RNAseqBam2=NULL,RNAlab1="RNA_sample1",RNAlab2=NULL,RNAseqBamPaired="paired",Ribolab1="Ribo_sample1",Ribolab2=NULL,S_NAME1="sample1",S_NAME2=NULL,RNAbackground="#FEFEAE"){
   #get path to RNASeq Bam file
   RNAseqBam1 <- RNAseqBam1
-  if (is.null(RNAseqBam2)=F){
+  if (is.null(RNAseqBam2)==F){
     RNAseqBam2 <- RNAseqBam2
   }
   #get ribo-seq all p-site information
