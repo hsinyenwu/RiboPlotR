@@ -890,7 +890,7 @@ PLOTg <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_N
   #Do not set first transcript because some genes do not have isoform 1
   suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,nchar(YFG)+2)))
   if(missing(isoform)) {isoform <- "1"}
-  stopifnot(paste0(YFG,".",isoform,sep = "") %in% names(cdsByTx))
+  # stopifnot(paste0(YFG,".",isoform,sep = "") %in% names(cdsByTx))
   par(mfrow=c(2,1),mar=c(0.2,0.3,0.2,0.2),oma=c(3,4,3,4))
   chr <- as.character(seqnames(exonsByGene[YFG])[[1]])[1]
   generanges <- ranges(unlist(exonsByGene[YFG]))
