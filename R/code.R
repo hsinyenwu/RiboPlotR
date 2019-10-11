@@ -106,20 +106,20 @@ rna_bam.ribo <- function(Ribo1,Ribo2=NULL,RNAseqBam1,RNAseqBam2=NULL,RNAlab1="RN
   assign("RNAbackground", RNAbackground, envir = .GlobalEnv)
   
   #Get the second set of data, if available
-  if (!missing(RNAseqBam2)){
+  if (RNAseqBam2!=NULL){
     assign("RNAseqBam2", RNAseqBam2, envir = .GlobalEnv)
   }
-  if (!missing(Ribo2)){
+  if (Ribo2!=NULL){
     Ribo2 <- read.delim(file=Ribo2,header=F,stringsAsFactors=F,sep="\t")
     colnames(Ribo2) <- c("count", "chr", "position", "strand")
   }
-  if (!missing(RNAlab2)){
+  if (RNAlab2!=NULL){
     assign("RNAlab2", RNAlab2, envir = .GlobalEnv)
   }
-  if (!missing(Ribolab2)){
+  if (Ribolab2!=NULL){
     assign("Ribolab2", Ribolab2, envir = .GlobalEnv)
   }
-  if (!missing(S_NAME2)){
+  if (S_NAME2!=NULL){
     assign("S_NAME2", S_NAME2, envir = .GlobalEnv)
   }
 }

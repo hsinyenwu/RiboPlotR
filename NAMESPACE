@@ -2,6 +2,7 @@
 
 export(PLOTc)
 export(PLOTc2)
+export(PLOTg)
 export(PLOTt)
 export(PLOTt2)
 export(gene.structure)

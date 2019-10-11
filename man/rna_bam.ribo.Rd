@@ -4,11 +4,11 @@
 \alias{rna_bam.ribo}
 \title{Function to get bam file path, ribo-seq p-site information and axis labels information.}
 \usage{
-rna_bam.ribo(Ribo1, Ribo2, RNAseqBam1, RNAseqBam2,
-  RNAlab1 = "RNA_sample1", RNAlab2 = "RNA_sample2",
+rna_bam.ribo(Ribo1, Ribo2 = NULL, RNAseqBam1, RNAseqBam2 = NULL,
+  RNAlab1 = "RNA_sample1", RNAlab2 = NULL,
   RNAseqBamPaired = "paired", Ribolab1 = "Ribo_sample1",
-  Ribolab2 = "Ribo_sample2", S_NAME1 = "sample1",
-  S_NAME2 = "sample2", RNAbackground = "#FEFEAE")
+  Ribolab2 = NULL, S_NAME1 = "sample1", S_NAME2 = NULL,
+  RNAbackground = "#FEFEAE")
 }
 \arguments{
 \item{Ribo1}{The first ribo-seq tsv file path.}
