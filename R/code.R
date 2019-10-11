@@ -94,23 +94,39 @@ uorf.structure <- function(uorf_annotation,format="gtf",dataSource="",organism="
 rna_bam.ribo <- function(Ribo1,Ribo2,RNAseqBam1,RNAseqBam2,RNAlab1="RNA_sample1",RNAlab2="RNA_sample2",RNAseqBamPaired="paired",Ribolab1="Ribo_sample1",Ribolab2="Ribo_sample2",S_NAME1="sample1",S_NAME2="sample2",RNAbackground="#FEFEAE"){
   #get path to RNASeq Bam file
   RNAseqBam1 <- RNAseqBam1
-  RNAseqBam2 <- RNAseqBam2
+  if (is.null(RNAseqBam2)=F){
+    RNAseqBam2 <- RNAseqBam2
+  }
   #get ribo-seq all p-site information
   Ribo1 <- read.delim(file=Ribo1,header=F,stringsAsFactors=F,sep="\t")
   colnames(Ribo1) <- c("count", "chr", "position", "strand")
-  Ribo2 <- read.delim(file=Ribo2,header=F,stringsAsFactors=F,sep="\t")
-  colnames(Ribo2) <- c("count", "chr", "position", "strand")
+  if (is.null(Ribo2)=F){
+    Ribo2 <- read.delim(file=Ribo2,header=F,stringsAsFactors=F,sep="\t")
+    colnames(Ribo2) <- c("count", "chr", "position", "strand")
+  }
   assign("RNAseqBamPaired", RNAseqBamPaired, envir = .GlobalEnv)
   assign("RNAseqBam1", RNAseqBam1, envir = .GlobalEnv)
   assign("Ribo1", Ribo1, envir = .GlobalEnv)
-  assign("RNAseqBam2", RNAseqBam2, envir = .GlobalEnv)
-  assign("Ribo2", Ribo2, envir = .GlobalEnv)
   assign("RNAlab1", RNAlab1, envir = .GlobalEnv)
-  assign("RNAlab2", RNAlab2, envir = .GlobalEnv)
   assign("Ribolab1", Ribolab1, envir = .GlobalEnv)
-  assign("Ribolab2", Ribolab2, envir = .GlobalEnv)
   assign("S_NAME1", S_NAME1, envir = .GlobalEnv)
-  assign("S_NAME2", S_NAME2, envir = .GlobalEnv)
+  
+  if (is.null(RNAseqBam2)=F){
+    assign("RNAseqBam2", RNAseqBam2, envir = .GlobalEnv)
+  }
+  if (is.null(Ribo2)=F){
+    assign("Ribo2", Ribo2, envir = .GlobalEnv)
+  }
+  if (is.null(RNAlab2)=F){
+    assign("RNAlab2", RNAlab2, envir = .GlobalEnv)
+  }
+  if (is.null(Ribolab2)=F){
+    assign("Ribolab2", Ribolab2, envir = .GlobalEnv)
+  }
+  if (is.null(S_NAME2)=F){
+    assign("S_NAME2", S_NAME2, envir = .GlobalEnv)
+  }
+  
   assign("RNAbackground", RNAbackground, envir = .GlobalEnv)
 }
 
@@ -802,13 +818,15 @@ PLOTc2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ri
   mtext(paste(YFG,"  ",NAME),side=3,line=0.4, cex=1.2, col="black", outer=TRUE,font=3)
 }
 
-#' @title PLOTg plot RNA-seq and ribo-seq together for one datasets without CDS information
+#' @title p_site_plot_genome plot RNA-seq and ribo-seq together for one datasets without CDS information
 #' @description PLOTg plot RNA-seq and ribo-seq together for one datasets. It also contains a plot with transcript models.
-#' 
 #' @param GeneName Gene ID
 #' @param ribo riboseq dataset
-#' @export
-p_site_plot_genome <- function(GeneName,ribo) {
+#' @param Extend Integer, plot more at both ends 
+#' @param YLIM Integer, max value of Y-axis
+#' @return a plot for the Ribo-seq reads with periodicity
+
+p_site_plot_genome <- function(GeneName,ribo,Extend=Extend,YLIM) {
   #Here do not consider isoform and CDSonly
   Tx <- txByGene[names(txByGene)==GeneName,]
   # find ranges of exons
@@ -906,6 +924,7 @@ PLOTg <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_N
   
   max_Y <- max(Gtx)
   max_P <- max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend))
+  
   plot(Gtx,type="h",col=RNAbackground,lwd=1,xaxt='n',ylim=c(0,max_Y+2))
   par(new = T)
   plot(Gtx,type="l",col="darkgrey",lwd=1,xaxt='n',ylim=c(0,max_Y+2))
@@ -913,7 +932,7 @@ PLOTg <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_N
   legend("topleft",SAMPLE1,bty="n",cex=1.2,text.font=2)
   par(new = T)
   p_site_plot_genome(GeneName=YFG,ribo=ribo1)
-  par(new=TRUE)
+  par(new = TRUE)
   if (!is.null(uORF)) {p_site_plot_p2(gene=YFG,uORF=uORF,CDSonly=TRUE,uORF.isoform=1,ribo1,Extend=Extend,YLIM=max_P)}
   axis(side = 4)
   mtext(RNAlab1, side = 2, line = 2)
