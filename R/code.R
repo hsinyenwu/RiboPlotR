@@ -112,6 +112,7 @@ rna_bam.ribo <- function(Ribo1,Ribo2=NULL,RNAseqBam1,RNAseqBam2=NULL,RNAlab1="RN
   if (is.null(Ribo2)==F){
     Ribo2 <- read.delim(file=Ribo2,header=F,stringsAsFactors=F,sep="\t")
     colnames(Ribo2) <- c("count", "chr", "position", "strand")
+    assign("Ribo2", Ribo2, envir = .GlobalEnv)
   }
   if (is.null(RNAlab2)==F){
     assign("RNAlab2", RNAlab2, envir = .GlobalEnv)
