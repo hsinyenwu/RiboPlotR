@@ -526,7 +526,7 @@ PLOTt <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1=S_NAM
   isoforms <- length(unlist(txByGene[YFG]))
   layout(matrix(c(1,1,2,2,3,3),3,2,byrow=TRUE), widths=c(6,6,6), heights=c(2,2,0.5*isoforms))
   max_Y <- max(Gtx1)
-  max_P <- max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend))
+  max_P <- max(p_site_Y_max(YFG,ribo1,Extend=Extend))
   plot(Gtx1,type="h",col=RNAbackground,lwd=1,xaxt='n',ylim=c(0,max_Y+2))
   mtext(RNAlab1, side = 2, line = 2.5,cex=1)
   par(new = T)
@@ -608,8 +608,8 @@ PLOTt2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ri
   layout(matrix(c(1,1,2,2,3,3,4,4,5,5),5,2,byrow=TRUE), widths=c(6,6,6,6,6), heights=c(1.5,1.5,1.5,1.5,0.35*isoforms))
 
   max_Y <- max(max(Gtx1),max(Gtx2))
-  max_P <- max(max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend)),
-               max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo2,Extend=Extend)))
+  max_P <- max(max(p_site_Y_max(YFG,ribo1,Extend=Extend)),
+               max(p_site_Y_max(YFG,ribo2,Extend=Extend)))
   plot(Gtx1,type="h",col=RNAbackground,lwd=1,xaxt='n',ylim=c(0,max_Y+2))
   par(new = T)
   plot(Gtx1,type="l",col="darkgrey",lwd=1,xaxt='n',ylim=c(0,max_Y+2),yaxt="n",ylab=NULL)
@@ -683,7 +683,7 @@ PLOTc <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_N
   layout(matrix(c(1,1,2,2),2,2,byrow=TRUE), widths=c(6,6), heights=c(2.5,0.45*isoforms))
 
   max_Y <- max(Gtx)
-  max_P <- max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend))
+  max_P <- max(p_site_Y_max(YFG,ribo1,Extend=Extend))
   plot(Gtx,type="h",col=RNAbackground,lwd=1,xaxt='n',ylim=c(0,max_Y+2))
   par(new = T)
   plot(Gtx,type="l",col="darkgrey",lwd=1,xaxt='n',ylim=c(0,max_Y+2))
@@ -759,8 +759,8 @@ PLOTc2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ri
   }
   
   max_Y <- max(max(Gtx1),max(Gtx2))
-  max_P <- max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend),
-               p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo2,Extend=Extend))
+  max_P <- max(p_site_Y_max(YFG,ribo1,Extend=Extend),
+               p_site_Y_max(YFG,ribo2,Extend=Extend))
   plot(Gtx1,type="h",col=RNAbackground,lwd=1,xaxt='n',ylim=c(0,max_Y+2))
   par(new = T)
   plot(Gtx1,type="l",col="darkgrey",lwd=1,xaxt='n',ylim=c(0,max_Y+2),yaxt="n",ylab=NULL)
@@ -891,7 +891,7 @@ PLOTg <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_N
   layout(matrix(c(1,1,2,2),2,2,byrow=TRUE), widths=c(6,6), heights=c(2.5,0.45*isoforms))
   
   max_Y <- max(Gtx)
-  max_P <- max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend))
+  max_P <- max(p_site_Y_max(YFG,ribo1,Extend=Extend))
   
   plot(Gtx,type="h",col=RNAbackground,lwd=1,xaxt='n',ylim=c(0,max_Y+2))
   par(new = T)
