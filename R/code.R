@@ -260,54 +260,29 @@ plotGeneModel <- function(gene,uORF,Extend=Extend,p.isoform=isoform){
 #' @title Identify highest value of riboseq reads in a give gene.
 #' @description Identify highest value of riboseq reads in a give gene. This is for defining the max Y-axis values.
 #' @param GeneName Name of gene used
-#' @param isoform Which isoforms used
 #' @param ribo A data.frame of riboseq reads
-#' @param CDSonly True or False, do we only want to plot the CDS range
 #' @param Extend Do we want to plot a wider range. Default is 0.
 #'
 #' @return  The highest value of riboseq reads
 # Do not @export
 # No @example
 
-p_site_Y_max <- function(GeneName,isoform,ribo,CDSonly=FALSE,Extend=Extend) {
-  #CDSonly=T, then only plot the reads in the CDS
-  if(paste0(GeneName,".",isoform,sep = "") %in% names(cdsByTx)) {
-    CDS <- cds[paste(GeneName,".",isoform,sep = ""),]
-    #find ranges of exons
-    Exon <- exonsByGene[GeneName,]
-    #Extract chromosome number from CDS object
-    # chr=as.numeric(as.character(seqnames(unlist(CDS))))[1]
-    chr=as.character(seqnames(unlist(CDS)))[1]
-    #Extract strand information from CDS object
-    txStrand=as.character(strand(unlist(CDS)))[1]
-    #Extract the CDS ranges
-    cdsRanges = cdsByTx[names(cdsByTx)==paste0(GeneName,".",isoform,sep = ""),]
-    #Extract most left position from the Exon object
-    txLeft <-min(start(ranges(unlist(Exon))))
-    #Extract most right position from the Exon object
-    txRight <-max(end(ranges(unlist(Exon))))
-    #Extract most left position from the CDS object
-    cdsLeft=min(start(ranges(unlist(CDS))))
-    #Extract most right position from the CDS object
-    cdsRight=max(end(ranges(unlist(CDS))))
-    ##Extract start site from CDS object
-    cdsStart=ifelse(txStrand=="+",as.numeric(min(start(ranges(CDS)))),as.numeric(max(end(ranges(CDS)))))
-    cdsEnd=ifelse(txStrand=="+",as.numeric(max(end(ranges(CDS)))),as.numeric(min(start(ranges(CDS)))))
-    #Extract riboseq reads in the region of the transcript
-    if (CDSonly==TRUE) {
-      RiboRslt <- ribo[ribo[,2]==chr & ribo[,3] > cdsLeft & ribo[,3] < cdsRight & ribo$strand==txStrand,]
-    }
-    else if(CDSonly==FALSE) {
-      RiboRslt <- ribo[ribo[,2]==chr & ribo[,3] > txLeft-Extend & ribo[,3] < txRight+Extend & ribo$strand==txStrand,]
-    }
-    if(length(RiboRslt$count)==0) {
-      5 #have to give it a number otherwise it will stop here
-    } else {
-      max(RiboRslt$count)
-    }
-  }
-  else {
-    stop("Input transcript is not a coding gene in gtf/gff file.")
+p_site_Y_max <- function(GeneName,ribo,Extend=Extend) {
+  #find ranges of exons
+  Exon <- exonsByGene[GeneName,]
+  #Extract chromosome number from Exon
+  chr=as.character(seqnames(unlist(Exon)))[1]
+  #Extract strand information from Exon
+  txStrand=as.character(strand(unlist(Exon)))[1]
+  #Extract most left position from Exon
+  txLeft <-min(start(ranges(unlist(Exon))))
+  #Extract most right position from Exon
+  txRight <-max(end(ranges(unlist(Exon))))
+  RiboRslt <- ribo[ribo[,2]==chr & ribo[,3] > txLeft-Extend & ribo[,3] < txRight+Extend & ribo$strand==txStrand,]
+  if(length(RiboRslt$count)==0) {
+    5 #have to give it a number otherwise it will stop here
+  } else {
+    max(RiboRslt$count)
   }
 }
 
