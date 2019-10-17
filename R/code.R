@@ -260,29 +260,54 @@ plotGeneModel <- function(gene,uORF,Extend=Extend,p.isoform=isoform){
 #' @title Identify highest value of riboseq reads in a give gene.
 #' @description Identify highest value of riboseq reads in a give gene. This is for defining the max Y-axis values.
 #' @param GeneName Name of gene used
+#' @param isoform Which isoforms used
 #' @param ribo A data.frame of riboseq reads
+#' @param CDSonly True or False, do we only want to plot the CDS range
 #' @param Extend Do we want to plot a wider range. Default is 0.
 #'
 #' @return  The highest value of riboseq reads
 # Do not @export
 # No @example
 
-p_site_Y_max <- function(GeneName,ribo,Extend=Extend) {
-  #find ranges of exons
-  Exon <- exonsByGene[GeneName,]
-  #Extract chromosome number from Exon
-  chr=as.character(seqnames(unlist(Exon)))[1]
-  #Extract strand information from Exon
-  txStrand=as.character(strand(unlist(Exon)))[1]
-  #Extract most left position from Exon
-  txLeft <-min(start(ranges(unlist(Exon))))
-  #Extract most right position from Exon
-  txRight <-max(end(ranges(unlist(Exon))))
-  RiboRslt <- ribo[ribo[,2]==chr & ribo[,3] > txLeft-Extend & ribo[,3] < txRight+Extend & ribo$strand==txStrand,]
-  if(length(RiboRslt$count)==0) {
-    5 #have to give it a number otherwise it will stop here
-  } else {
-    max(RiboRslt$count)
+p_site_Y_max <- function(GeneName,isoform,ribo,CDSonly=FALSE,Extend=Extend) {
+  #CDSonly=T, then only plot the reads in the CDS
+  if(paste0(GeneName,".",isoform,sep = "") %in% names(cdsByTx)) {
+    CDS <- cds[paste(GeneName,".",isoform,sep = ""),]
+    #find ranges of exons
+    Exon <- exonsByGene[GeneName,]
+    #Extract chromosome number from CDS object
+    # chr=as.numeric(as.character(seqnames(unlist(CDS))))[1]
+    chr=as.character(seqnames(unlist(CDS)))[1]
+    #Extract strand information from CDS object
+    txStrand=as.character(strand(unlist(CDS)))[1]
+    #Extract the CDS ranges
+    cdsRanges = cdsByTx[names(cdsByTx)==paste0(GeneName,".",isoform,sep = ""),]
+    #Extract most left position from the Exon object
+    txLeft <-min(start(ranges(unlist(Exon))))
+    #Extract most right position from the Exon object
+    txRight <-max(end(ranges(unlist(Exon))))
+    #Extract most left position from the CDS object
+    cdsLeft=min(start(ranges(unlist(CDS))))
+    #Extract most right position from the CDS object
+    cdsRight=max(end(ranges(unlist(CDS))))
+    ##Extract start site from CDS object
+    cdsStart=ifelse(txStrand=="+",as.numeric(min(start(ranges(CDS)))),as.numeric(max(end(ranges(CDS)))))
+    cdsEnd=ifelse(txStrand=="+",as.numeric(max(end(ranges(CDS)))),as.numeric(min(start(ranges(CDS)))))
+    #Extract riboseq reads in the region of the transcript
+    if (CDSonly==TRUE) {
+      RiboRslt <- ribo[ribo[,2]==chr & ribo[,3] > cdsLeft & ribo[,3] < cdsRight & ribo$strand==txStrand,]
+    }
+    else if(CDSonly==FALSE) {
+      RiboRslt <- ribo[ribo[,2]==chr & ribo[,3] > txLeft-Extend & ribo[,3] < txRight+Extend & ribo$strand==txStrand,]
+    }
+    if(length(RiboRslt$count)==0) {
+      5 #have to give it a number otherwise it will stop here
+    } else {
+      max(RiboRslt$count)
+    }
+  }
+  else {
+    stop("Input transcript is not a coding gene in gtf/gff file.")
   }
 }
 
@@ -526,7 +551,7 @@ PLOTt <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1=S_NAM
   isoforms <- length(unlist(txByGene[YFG]))
   layout(matrix(c(1,1,2,2,3,3),3,2,byrow=TRUE), widths=c(6,6,6), heights=c(2,2,0.5*isoforms))
   max_Y <- max(Gtx1)
-  max_P <- max(p_site_Y_max(YFG,ribo1,Extend=Extend))
+  max_P <- max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend))
   plot(Gtx1,type="h",col=RNAbackground,lwd=1,xaxt='n',ylim=c(0,max_Y+2))
   mtext(RNAlab1, side = 2, line = 2.5,cex=1)
   par(new = T)
@@ -608,8 +633,8 @@ PLOTt2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ri
   layout(matrix(c(1,1,2,2,3,3,4,4,5,5),5,2,byrow=TRUE), widths=c(6,6,6,6,6), heights=c(1.5,1.5,1.5,1.5,0.35*isoforms))
 
   max_Y <- max(max(Gtx1),max(Gtx2))
-  max_P <- max(max(p_site_Y_max(YFG,ribo1,Extend=Extend)),
-               max(p_site_Y_max(YFG,ribo2,Extend=Extend)))
+  max_P <- max(max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend)),
+               max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo2,Extend=Extend)))
   plot(Gtx1,type="h",col=RNAbackground,lwd=1,xaxt='n',ylim=c(0,max_Y+2))
   par(new = T)
   plot(Gtx1,type="l",col="darkgrey",lwd=1,xaxt='n',ylim=c(0,max_Y+2),yaxt="n",ylab=NULL)
@@ -683,7 +708,7 @@ PLOTc <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_N
   layout(matrix(c(1,1,2,2),2,2,byrow=TRUE), widths=c(6,6), heights=c(2.5,0.45*isoforms))
 
   max_Y <- max(Gtx)
-  max_P <- max(p_site_Y_max(YFG,ribo1,Extend=Extend))
+  max_P <- max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend))
   plot(Gtx,type="h",col=RNAbackground,lwd=1,xaxt='n',ylim=c(0,max_Y+2))
   par(new = T)
   plot(Gtx,type="l",col="darkgrey",lwd=1,xaxt='n',ylim=c(0,max_Y+2))
@@ -759,8 +784,8 @@ PLOTc2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ri
   }
   
   max_Y <- max(max(Gtx1),max(Gtx2))
-  max_P <- max(p_site_Y_max(YFG,ribo1,Extend=Extend),
-               p_site_Y_max(YFG,ribo2,Extend=Extend))
+  max_P <- max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend),
+               p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo2,Extend=Extend))
   plot(Gtx1,type="h",col=RNAbackground,lwd=1,xaxt='n',ylim=c(0,max_Y+2))
   par(new = T)
   plot(Gtx1,type="l",col="darkgrey",lwd=1,xaxt='n',ylim=c(0,max_Y+2),yaxt="n",ylab=NULL)
@@ -891,7 +916,7 @@ PLOTg <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_N
   layout(matrix(c(1,1,2,2),2,2,byrow=TRUE), widths=c(6,6), heights=c(2.5,0.45*isoforms))
   
   max_Y <- max(Gtx)
-  max_P <- max(p_site_Y_max(YFG,ribo1,Extend=Extend))
+  max_P <- max(p_site_Y_max(YFG,CDSonly=CDSonly,isoform=isoform,ribo1,Extend=Extend))
   
   plot(Gtx,type="h",col=RNAbackground,lwd=1,xaxt='n',ylim=c(0,max_Y+2))
   par(new = T)
