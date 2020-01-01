@@ -517,11 +517,12 @@ firstInFramePSitePerExonNegative <- function(x){
 #' @param isoform Integer. Which isoform to plot periodicity.
 #' @param uORF Gene ID for uORF
 #' @param NAME Name of the gene
+#' @param uORF.isoform Isoform number of the uORF
 #' @return One plot with RNA-seq and ribo-seq separately.
 #' @export
 #'
 # No @examples
-PLOTt <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1=S_NAME1,CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="") {
+PLOTt <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1=S_NAME1,CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="",uORF.isoform) {
   transcript_id <- unlist(txByGene[YFG])$tx_name
   #Do not set first transcript because some genes do not have isoform 1
   suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,nchar(YFG)+2)))
@@ -586,10 +587,11 @@ PLOTt <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1=S_NAM
 #' @param isoform Integer. Which isoform to plot periodicity.
 #' @param uORF Gene ID for uORF
 #' @param NAME Name of the gene
+#' @param uORF.isoform Isoform number of the uORF
 #' @return 2 plots for RNAseq and Riboseq in 2 different conditions. 
 #' @export
 
-PLOTt2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ribo2,ylab1=Ribolab1,ylab2=Ribolab2,SAMPLE1 = S_NAME1, SAMPLE2 = S_NAME2,CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="") {
+PLOTt2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ribo2,ylab1=Ribolab1,ylab2=Ribolab2,SAMPLE1 = S_NAME1, SAMPLE2 = S_NAME2,CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="",uORF.isoform) {
   transcript_id <- unlist(txByGene[YFG])$tx_name
   #Do not set first transcript because some genes do not have isoform 1
   suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,nchar(YFG)+2)))
@@ -673,10 +675,11 @@ PLOTt2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ri
 #' @param isoform Integer. Which isoform to plot periodicity.
 #' @param uORF Gene ID for uORF
 #' @param NAME Name of the gene
+#' #' @param uORF.isoform Isoform number of the uORF
 #' @return Both RNAseq and Riboseq plot together for one set of data
 #' @export
 
-PLOTc <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_NAME1,CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="") {
+PLOTc <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_NAME1,CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="",uORF.isoform) {
   transcript_id <- unlist(txByGene[YFG])$tx_name
   #Do not set first transcript because some genes do not have isoform 1
   suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,nchar(YFG)+2)))
@@ -741,10 +744,11 @@ PLOTc <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_N
 #' @param isoform Integer. Which isoform to plot periodicity.
 #' @param uORF Gene ID for uORF
 #' @param NAME Name of the gene
+#' @param uORF.isoform Isoform number of the uORF
 #' @return 2 plots for RNAseq and Riboseq in 2 different genotypes/conditions. 
 #' @export
 
-PLOTc2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ribo2,SAMPLE1 = S_NAME1, SAMPLE2 = S_NAME2, CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="") {
+PLOTc2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ribo2,SAMPLE1 = S_NAME1, SAMPLE2 = S_NAME2, CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="",uORF.isoform) {
   transcript_id <- unlist(txByGene[YFG])$tx_name
   #Do not set first transcript because some genes do not have isoform 1
   suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,nchar(YFG)+2)))
@@ -812,7 +816,7 @@ PLOTc2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ri
   plotGeneModel(YFG,Extend=Extend,uORF=uORF,p.isoform=isoform)
   mtext(paste(YFG,"  ",NAME),side=3,line=0.4, cex=1.2, col="black", outer=TRUE,font=3)
 }
-
+                                 
 #' @title p_site_plot_genome plot RNA-seq and ribo-seq together for one datasets without CDS information
 #' @description PLOTg plot RNA-seq and ribo-seq together for one datasets. It also contains a plot with transcript models.
 #' @param GeneName Gene ID
