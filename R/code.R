@@ -405,7 +405,7 @@ p_site_plot_p <- function(GeneName,isoform,ribo,CDSonly=FALSE,Extend=Extend,YLIM
 #' @param YLIM Integer, max value of Y-axis
 #' @return a plot for the Ribo-seq reads with periodicity
 
-p_site_plot_p2 <- function(gene,uORF,uORF.isoform=1,ribo,CDSonly=TRUE,Extend=Extend,YLIM) {
+p_site_plot_p2 <- function(gene,uORF,uORF.isoform=uORF.isoform,ribo,CDSonly=TRUE,Extend=Extend,YLIM) {
   #CDSonly=T, then only plot the reads in the CDS
   if(paste0(uORF,".",uORF.isoform,sep = "") %in% names(cdsByTx_u)) {
     CDS <- cds_u[paste(uORF,".",uORF.isoform,sep = ""),]
@@ -675,7 +675,7 @@ PLOTt2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ri
 #' @param isoform Integer. Which isoform to plot periodicity.
 #' @param uORF Gene ID for uORF
 #' @param NAME Name of the gene
-#' #' @param uORF.isoform Isoform number of the uORF
+#' @param uORF.isoform Isoform number of the uORF
 #' @return Both RNAseq and Riboseq plot together for one set of data
 #' @export
 
