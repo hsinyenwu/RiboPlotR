@@ -139,7 +139,7 @@ rna_bam.ribo <- function(Ribo1,Ribo2=NULL,RNAseqBam1,RNAseqBam2=NULL,RNAlab1="RN
 #' @param uORF.isoform uORF isoform number
 #' @return plot each isoform
 
-plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(substitute(x)),colCDS = "black",col3="white",col5="lightgrey",uORF.isoform) {
+plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(substitute(x)),colCDS = "black",col3="white",col5="lightgrey",uORF.isoform=NULL) {
   if(isoform %in% names(cdsByTx)) {
     height <- 0.1
     xlim=ranges(unlist(exonsByTx[isoform]))
@@ -225,7 +225,7 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(s
 #' @param uORF.isoform uORF isoform number
 #' @return plot the gene model
 
-plotGeneModel <- function(gene,uORF,Extend=Extend,p.isoform=isoform,uORF.isoform){
+plotGeneModel <- function(gene,uORF,Extend=Extend,p.isoform=isoform,uORF.isoform=NULL){
   isoforms <- length(unlist(txByGene[gene]))
   generanges <- ranges(unlist(exonsByGene[gene]))
   print(paste0("plotGeneModel","_",uORF.isoform))
@@ -411,7 +411,7 @@ p_site_plot_p <- function(GeneName,isoform,ribo,CDSonly=FALSE,Extend=Extend,YLIM
 #' @param YLIM Integer, max value of Y-axis
 #' @return a plot for the Ribo-seq reads with periodicity
 
-p_site_plot_p2 <- function(gene,uORF,uORF.isoform,ribo,CDSonly=TRUE,Extend=Extend,YLIM) {
+p_site_plot_p2 <- function(gene,uORF,uORF.isoform=NULL,ribo,CDSonly=TRUE,Extend=Extend,YLIM) {
   #CDSonly=T, then only plot the reads in the CDS
   if(missing(uORF.isoform)) {uORF.isoform <- "1"}
   if(paste0(uORF,".",uORF.isoform,sep = "") %in% names(cdsByTx_u)) {
