@@ -410,7 +410,7 @@ p_site_plot_p2 <- function(gene,uORF,uORF.isoform,ribo,CDSonly=TRUE,Extend=Exten
   if(paste0(uORF,".",uORF.isoform,sep = "") %in% names(cdsByTx_u)) {
     CDS <- cds_u[paste(uORF,".",uORF.isoform,sep = ""),]
     #find ranges of exons
-    Exon <- exonsByGene_u[uORF,]
+    Exon <- exonsByGene_u[paste(uORF,".",uORF.isoform,sep = ""),]
     #Extract chromosome number from CDS object
     # chr=as.numeric(as.character(seqnames(unlist(CDS))))[1]
     chr=as.character(seqnames(unlist(CDS)))[1]
