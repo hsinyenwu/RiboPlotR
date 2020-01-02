@@ -170,8 +170,8 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(s
     rect(start(xlimCds), ybottom, end(xlimCds), ybottom + height, col =c("black","black","black")[Frame] , border = "black")
     if (!is.null(uORF)) {
       #The next if check if the isoform contains the range of the uORF, if not, do not plot the uORF in the gene model.
-      if(sum(width(GenomicRanges::setdiff(unlist(cdsByTx_u[paste0(uORF,uORF.isoform)]),unlist(exonsByTx[isoform]))))==0) {
-        uORF=paste0(uORF,uORF.isoform)
+      if(sum(width(GenomicRanges::setdiff(unlist(cdsByTx_u[paste0(uORF,".",uORF.isoform)]),unlist(exonsByTx[isoform]))))==0) {
+        uORF=paste0(uORF,".",uORF.isoform)
         xlim_uORF=ranges(unlist(cdsByTx_u[uORF]))
         rect(start(xlim_uORF), ybottom, end(xlim_uORF), ybottom + height, col ="yellow" , border = "black")
       }
