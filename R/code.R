@@ -228,6 +228,7 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(s
 plotGeneModel <- function(gene,uORF,Extend=Extend,p.isoform=isoform,uORF.isoform){
   isoforms <- length(unlist(txByGene[gene]))
   generanges <- ranges(unlist(exonsByGene[gene]))
+  print(paste0(plotGeneModel,"_",uORF.isoform))
   if(missing(uORF.isoform)) {uORF.isoform <- "1"}
   SUW <- sum(width(generanges))
   xlimg= min(start(generanges))-0.05
@@ -244,7 +245,7 @@ plotGeneModel <- function(gene,uORF,Extend=Extend,p.isoform=isoform,uORF.isoform
     k2=which(tx_num==k)
     if (i %in% names(threeUTR)) {
       shortest3UTR <- min(sapply(isoforms.w.3UTR, function(j) width(tail(unlist(threeUTR[j]),1))))
-      plotRanges(isoform=i,uORF,shortest3UTR,ybottom=(yAxis-0.28*k2),uORF.isoform) #removed
+      plotRanges(isoform=i,uORF,shortest3UTR,ybottom=(yAxis-0.28*k2),uORF.isoform=uORF.isoform) #removed
       if (p.isoform==k){
         text(x=min(start(generanges))-Extend-0.1, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.4,font=2)
       } else {
@@ -252,7 +253,7 @@ plotGeneModel <- function(gene,uORF,Extend=Extend,p.isoform=isoform,uORF.isoform
       }
     }
     else {
-      plotRanges(isoform=i,uORF,ybottom=(yAxis-0.28*k2),uORF.isoform)
+      plotRanges(isoform=i,uORF,ybottom=(yAxis-0.28*k2),uORF.isoform=uORF.isoform)
       if (p.isoform==k){
         text(x=min(start(generanges))-Extend-0.1, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.4,font=2)
       } else {
