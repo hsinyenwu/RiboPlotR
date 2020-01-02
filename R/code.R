@@ -519,7 +519,7 @@ firstInFramePSitePerExonNegative <- function(x){
 #' @param isoform Integer. Which isoform to plot periodicity.
 #' @param uORF Gene ID for uORF
 #' @param NAME Name of the gene
-#' @param uORF.isoform Isoform number of the uORF
+#' @param uORFisoform Isoform number of the uORF
 #' @return One plot with RNA-seq and ribo-seq separately.
 #' @export
 #'
@@ -589,7 +589,7 @@ PLOTt <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1=S_NAM
 #' @param isoform Integer. Which isoform to plot periodicity.
 #' @param uORF Gene ID for uORF
 #' @param NAME Name of the gene
-#' @param uORF.isoform Isoform number of the uORF
+#' @param uORFisoform Isoform number of the uORF
 #' @return 2 plots for RNAseq and Riboseq in 2 different conditions. 
 #' @export
 
@@ -677,7 +677,7 @@ PLOTt2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ri
 #' @param isoform Integer. Which isoform to plot periodicity.
 #' @param uORF Gene ID for uORF
 #' @param NAME Name of the gene
-#' @param uORF.isoform Isoform number of the uORF
+#' @param uORFisoform Isoform number of the uORF
 #' @return Both RNAseq and Riboseq plot together for one set of data
 #' @export
 
@@ -746,7 +746,7 @@ PLOTc <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_N
 #' @param isoform Integer. Which isoform to plot periodicity.
 #' @param uORF Gene ID for uORF
 #' @param NAME Name of the gene
-#' @param uORF.isoform Isoform number of the uORF
+#' @param uORFisoform Isoform number of the uORF
 #' @return 2 plots for RNAseq and Riboseq in 2 different genotypes/conditions. 
 #' @export
 
