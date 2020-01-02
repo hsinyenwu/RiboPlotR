@@ -169,7 +169,6 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(s
     # plot
     rect(start(xlimCds), ybottom, end(xlimCds), ybottom + height, col =c("black","black","black")[Frame] , border = "black")
     if (!is.null(uORF)) {
-      print(uORF.isoform)
       if(missing(uORF.isoform)) {uORF.isoform <- "1"}
       #The next if check if the isoform contains the range of the uORF, if not, do not plot the uORF in the gene model.
       if(sum(width(GenomicRanges::setdiff(unlist(cdsByTx_u[paste0(uORF,".",uORF.isoform)]),unlist(exonsByTx[isoform]))))==0) {
@@ -228,7 +227,6 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(s
 plotGeneModel <- function(gene,uORF,Extend=Extend,p.isoform=isoform,uORF.isoform=NULL){
   isoforms <- length(unlist(txByGene[gene]))
   generanges <- ranges(unlist(exonsByGene[gene]))
-  print(paste0("plotGeneModel","_",uORF.isoform))
   if(missing(uORF.isoform)) {uORF.isoform <- "1"}
   SUW <- sum(width(generanges))
   xlimg= min(start(generanges))-0.05
@@ -531,6 +529,7 @@ firstInFramePSitePerExonNegative <- function(x){
 # No @examples
 PLOTt <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1=S_NAME1,CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="",uORFisoform) {
   transcript_id <- unlist(txByGene[YFG])$tx_name
+  if(missing(uORFisoform)) {uORFisoform <- "1"}
   #Do not set first transcript because some genes do not have isoform 1
   suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,nchar(YFG)+2)))
   if(missing(isoform)) {isoform <- "1"}
@@ -603,6 +602,7 @@ PLOTt2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ri
   transcript_id <- unlist(txByGene[YFG])$tx_name
   #Do not set first transcript because some genes do not have isoform 1
   suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,nchar(YFG)+2)))
+  if(missing(uORFisoform)) {uORFisoform <- "1"}
   if(missing(isoform)) {isoform <- "1"}
   stopifnot(paste0(YFG,".",isoform,sep = "") %in% names(cdsByTx))
   
@@ -692,6 +692,7 @@ PLOTt2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ri
 #' @export
 
 PLOTc <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_NAME1,CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="",uORFisoform) {
+  if(missing(uORFisoform)) {uORFisoform <- "1"}
   transcript_id <- unlist(txByGene[YFG])$tx_name
   #Do not set first transcript because some genes do not have isoform 1
   suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,nchar(YFG)+2)))
@@ -763,6 +764,7 @@ PLOTc <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_N
 #' @export
 
 PLOTc2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ribo2,SAMPLE1 = S_NAME1, SAMPLE2 = S_NAME2, CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="",uORFisoform) {
+  if(missing(uORFisoform)) {uORFisoform <- "1"}
   transcript_id <- unlist(txByGene[YFG])$tx_name
   #Do not set first transcript because some genes do not have isoform 1
   suppressWarnings(first_transcript <- as.numeric(substring(transcript_id,nchar(YFG)+2)))
