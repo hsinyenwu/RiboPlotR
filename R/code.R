@@ -568,7 +568,7 @@ PLOTt <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1=S_NAM
     p_site_plot_p2(gene=YFG,uORF=uORF,CDSonly=TRUE,uORF.isoform=uORFisoform,ribo1,Extend=Extend,YLIM=max_P)
     }
   #Plot gene model
-  plotGeneModel(YFG,Extend=Extend,uORF=uORF,p.isoform=isoform)
+  plotGeneModel(YFG,Extend=Extend,uORF=uORF,p.isoform=isoform,uORF.isoform=uORFisoform)
   mtext(paste(YFG,"  ",NAME),side=3,line=0.4, cex=1.2, col="black", outer=TRUE)
 }
 
@@ -661,7 +661,7 @@ PLOTt2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ri
   if (!is.null(uORF)) {p_site_plot_p2(gene=YFG,uORF=uORF,CDSonly=TRUE,uORF.isoform=uORFisoform,ribo2,Extend=Extend,YLIM=max_P)}
   legend("topright",legend=Ribolab1,bty="n",cex=1.2)
   #Plot gene model
-  plotGeneModel(YFG,Extend=Extend,uORF=uORF,p.isoform=isoform)
+  plotGeneModel(YFG,Extend=Extend,uORF=uORF,p.isoform=isoform,uORF.isoform=uORFisoform)
   mtext(paste(YFG,"  ",NAME),side=3,line=0.4, cex=1.2, col="black", outer=TRUE,font=3)
 }
 
@@ -727,7 +727,7 @@ PLOTc <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_N
   mtext(RNAlab1, side = 2, line = 2)
   mtext(Ribolab1, side = 4, line = 2)
   #Plot gene model
-  plotGeneModel(YFG,Extend=Extend,uORF=uORF,p.isoform=isoform)
+  plotGeneModel(YFG,Extend=Extend,uORF=uORF,p.isoform=isoform,uORF.isoform=uORFisoform)
   mtext(paste(YFG,"  ",NAME),side=3,line=0.4, cex=1.2, col="black", outer=TRUE,font=3)
 }
 
@@ -815,7 +815,7 @@ PLOTc2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=Ri
   mtext(Ribolab1, side=4, outer=T, at=0.64,line =2.5,cex=1.2)
   mtext(RNAlab1, side=2, outer=T, at=0.64,line =2.5,cex=1.2)
   #Plot gene model
-  plotGeneModel(YFG,Extend=Extend,uORF=uORF,p.isoform=isoform)
+  plotGeneModel(YFG,Extend=Extend,uORF=uORF,p.isoform=isoform,uORF.isoform=uORFisoform)
   mtext(paste(YFG,"  ",NAME),side=3,line=0.4, cex=1.2, col="black", outer=TRUE,font=3)
 }
                                  
@@ -937,7 +937,7 @@ PLOTg <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_N
   mtext(RNAlab1, side = 2, line = 2)
   mtext(Ribolab1, side = 4, line = 2)
   #Plot gene model
-  plotGeneModel(YFG,Extend=Extend,uORF=uORF,p.isoform=isoform)
+  plotGeneModel(YFG,Extend=Extend,uORF=uORF,p.isoform=isoform,uORF.isoform=uORFisoform)
   mtext(paste(YFG,"  ",NAME),side=3,line=0.4, cex=1.2, col="black", outer=TRUE,font=3)
 }
 
