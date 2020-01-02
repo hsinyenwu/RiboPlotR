@@ -228,7 +228,7 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(s
 plotGeneModel <- function(gene,uORF,Extend=Extend,p.isoform=isoform,uORF.isoform){
   isoforms <- length(unlist(txByGene[gene]))
   generanges <- ranges(unlist(exonsByGene[gene]))
-  print(paste0(plotGeneModel,"_",uORF.isoform))
+  print(paste0("plotGeneModel","_",uORF.isoform))
   if(missing(uORF.isoform)) {uORF.isoform <- "1"}
   SUW <- sum(width(generanges))
   xlimg= min(start(generanges))-0.05
