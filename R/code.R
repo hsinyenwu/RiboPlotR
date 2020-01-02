@@ -220,9 +220,10 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(s
 #' @param uORF uORF ID
 #' @param Extend number of nucleotides to extend on both side of the gene model
 #' @param p.isoform isoform that is been plotting at the PLOTc, PLOTt,PLOTc2 or PLOTt2 function
+#' @param uORF.isoform uORF isoform number
 #' @return plot the gene model
 
-plotGeneModel <- function(gene,uORF,Extend=Extend,p.isoform=isoform){
+plotGeneModel <- function(gene,uORF,Extend=Extend,p.isoform=isoform,uORF.isoform){
   isoforms <- length(unlist(txByGene[gene]))
   generanges <- ranges(unlist(exonsByGene[gene]))
   SUW <- sum(width(generanges))
@@ -240,7 +241,7 @@ plotGeneModel <- function(gene,uORF,Extend=Extend,p.isoform=isoform){
     k2=which(tx_num==k)
     if (i %in% names(threeUTR)) {
       shortest3UTR <- min(sapply(isoforms.w.3UTR, function(j) width(tail(unlist(threeUTR[j]),1))))
-      plotRanges(isoform=i,uORF,shortest3UTR,ybottom=(yAxis-0.28*k2)) #removed
+      plotRanges(isoform=i,uORF,shortest3UTR,ybottom=(yAxis-0.28*k2),uORF.isoform) #removed
       if (p.isoform==k){
         text(x=min(start(generanges))-Extend-0.1, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.4,font=2)
       } else {
@@ -248,7 +249,7 @@ plotGeneModel <- function(gene,uORF,Extend=Extend,p.isoform=isoform){
       }
     }
     else {
-      plotRanges(isoform=i,uORF,ybottom=(yAxis-0.28*k2))
+      plotRanges(isoform=i,uORF,ybottom=(yAxis-0.28*k2),uORF.isoform)
       if (p.isoform==k){
         text(x=min(start(generanges))-Extend-0.1, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.4,font=2)
       } else {
@@ -891,7 +892,7 @@ p_site_plot_genome <- function(GeneName,ribo,Extend=Extend,YLIM) {
 #' @return Both RNAseq and Riboseq plot together for one set of data
 #' @export
 
-PLOTg <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_NAME1,CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="") {
+PLOTg <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_NAME1,CDSonly=FALSE,Extend=50,isoform,uORF=NULL,NAME="",uORFisoform=1) {
   transcript_id <- unlist(txByGene[YFG])$tx_name
   #Do not set first transcript because some genes do not have isoform 1
   if(missing(isoform)) {isoform <- "1"}
@@ -931,7 +932,7 @@ PLOTg <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_N
   par(new = T)
   p_site_plot_genome(GeneName=YFG,ribo=ribo1,Extend=Extend)
   par(new = TRUE)
-  if (!is.null(uORF)) {p_site_plot_p2(gene=YFG,uORF=uORF,CDSonly=TRUE,uORF.isoform=1,ribo1,Extend=Extend,YLIM=max_P)}
+  if (!is.null(uORF)) {p_site_plot_p2(gene=YFG,uORF=uORF,CDSonly=TRUE,uORF.isoform,ribo1,Extend=Extend,YLIM=max_P)}
   axis(side = 4)
   mtext(RNAlab1, side = 2, line = 2)
   mtext(Ribolab1, side = 4, line = 2)
