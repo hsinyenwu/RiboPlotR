@@ -136,9 +136,10 @@ rna_bam.ribo <- function(Ribo1,Ribo2=NULL,RNAseqBam1,RNAseqBam2=NULL,RNAlab1="RN
 #' @param colCDS Color for CDS
 #' @param col3 Color for 3'UTR
 #' @param col5 Color for 5'UTR
+#' @param uORF.isoform uORF isoform number
 #' @return plot each isoform
 
-plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(substitute(x)),colCDS = "black",col3="white",col5="lightgrey") {
+plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(substitute(x)),colCDS = "black",col3="white",col5="lightgrey",uORF.isoform) {
   if(isoform %in% names(cdsByTx)) {
     height <- 0.1
     xlim=ranges(unlist(exonsByTx[isoform]))
@@ -169,8 +170,8 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(s
     rect(start(xlimCds), ybottom, end(xlimCds), ybottom + height, col =c("black","black","black")[Frame] , border = "black")
     if (!is.null(uORF)) {
       #The next if check if the isoform contains the range of the uORF, if not, do not plot the uORF in the gene model.
-      if(sum(width(GenomicRanges::setdiff(unlist(cdsByTx_u[paste0(uORF,".1")]),unlist(exonsByTx[isoform]))))==0) {
-        uORF=paste0(uORF,".1")
+      if(sum(width(GenomicRanges::setdiff(unlist(cdsByTx_u[paste0(uORF,uORF.isoform)]),unlist(exonsByTx[isoform]))))==0) {
+        uORF=paste0(uORF,uORF.isoform)
         xlim_uORF=ranges(unlist(cdsByTx_u[uORF]))
         rect(start(xlim_uORF), ybottom, end(xlim_uORF), ybottom + height, col ="yellow" , border = "black")
       }
