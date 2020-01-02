@@ -139,7 +139,7 @@ rna_bam.ribo <- function(Ribo1,Ribo2=NULL,RNAseqBam1,RNAseqBam2=NULL,RNAlab1="RN
 #' @param uORF.isoform uORF isoform number
 #' @return plot each isoform
 
-plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(substitute(x)),colCDS = "black",col3="white",col5="lightgrey",uORF.isoform=NULL) {
+plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(substitute(x)),colCDS = "black",col3="white",col5="lightgrey",uORF.isoform) {
   if(isoform %in% names(cdsByTx)) {
     height <- 0.1
     xlim=ranges(unlist(exonsByTx[isoform]))
@@ -169,7 +169,7 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(s
     # plot
     rect(start(xlimCds), ybottom, end(xlimCds), ybottom + height, col =c("black","black","black")[Frame] , border = "black")
     if (!is.null(uORF)) {
-      if(missing(uORFisoform)) {uORFisoform <- "1"}
+      if(missing(uORF.isoform)) {uORF.isoform <- "1"}
       #The next if check if the isoform contains the range of the uORF, if not, do not plot the uORF in the gene model.
       if(sum(width(GenomicRanges::setdiff(unlist(cdsByTx_u[paste0(uORF,".",uORF.isoform)]),unlist(exonsByTx[isoform]))))==0) {
         uORF=paste0(uORF,".",uORF.isoform)
@@ -227,7 +227,7 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(s
 plotGeneModel <- function(gene,uORF,Extend=Extend,p.isoform=isoform,uORF.isoform){
   isoforms <- length(unlist(txByGene[gene]))
   generanges <- ranges(unlist(exonsByGene[gene]))
-  if(missing(uORFisoform)) {uORFisoform <- "1"}
+  if(missing(uORF.isoform)) {uORF.isoform <- "1"}
   SUW <- sum(width(generanges))
   xlimg= min(start(generanges))-0.05
   genelim <- c(min(start(generanges))-Extend, max(end(generanges))+Extend)
@@ -411,6 +411,7 @@ p_site_plot_p <- function(GeneName,isoform,ribo,CDSonly=FALSE,Extend=Extend,YLIM
 
 p_site_plot_p2 <- function(gene,uORF,uORF.isoform,ribo,CDSonly=TRUE,Extend=Extend,YLIM) {
   #CDSonly=T, then only plot the reads in the CDS
+  if(missing(uORF.isoform)) {uORF.isoform <- "1"}
   if(paste0(uORF,".",uORF.isoform,sep = "") %in% names(cdsByTx_u)) {
     CDS <- cds_u[paste(uORF,".",uORF.isoform,sep = ""),]
     #find ranges of exons
@@ -947,7 +948,7 @@ PLOTg <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_N
   par(new = TRUE)
   if (!is.null(uORF)) {
     if(missing(uORFisoform)) {uORFisoform <- "1"}
-    p_site_plot_p2(gene=YFG,uORF=uORF,CDSonly=TRUE,uORF.isoform,ribo1,Extend=Extend,YLIM=max_P)}
+    p_site_plot_p2(gene=YFG,uORF=uORF,CDSonly=TRUE,uORF.isoform=uORFisoform,ribo1,Extend=Extend,YLIM=max_P)}
   axis(side = 4)
   mtext(RNAlab1, side = 2, line = 2)
   mtext(Ribolab1, side = 4, line = 2)
