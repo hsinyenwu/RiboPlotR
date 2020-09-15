@@ -962,8 +962,6 @@ PLOTg <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,ylab1=Ribolab1,SAMPLE1 = S_N
 }
 
 
-#Max height according to each sample's max
-#PLOTch2, plot 2 sets of RNA-seq and ribo-seq for comparison. The max height for each plot is according to each sample (PLOTc2 is according to both). It also contains a plot with transcript models.
 #' @title PLOTch2
 #' @description plot 2 sets of RNA-seq and ribo-seq for comparison. The max height for each plot is according to each sample (PLOTc2 is according to both). It also contains a plot with transcript models.
 #' @param YFG Gene ID
