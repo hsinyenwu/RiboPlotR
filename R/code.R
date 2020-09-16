@@ -1043,6 +1043,6 @@ PLOTch2 <-function(YFG,RNAbam1=RNAseqBam1,RNAbam2=RNAseqBam2,ribo1=Ribo1,ribo2=R
   mtext(Ribolab1, side=4, outer=T, at=0.64,line =2.5,cex=1.2)
   mtext(RNAlab1, side=2, outer=T, at=0.64,line =2.5,cex=1.2)
   #Plot gene model
-  plotGeneModel(YFG,Extend=Extend,uORF=uORF,p.isoform=isoform)
+  plotGeneModel(YFG,Extend=Extend,uORF=uORF,p.isoform=isoform,uORF.isoform=uORFisoform)
   mtext(paste(YFG,"  ",NAME),side=3,line=0.4, cex=1.2, col="black", outer=TRUE,font=3)
 }
