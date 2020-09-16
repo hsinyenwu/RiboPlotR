@@ -4,9 +4,19 @@
 \alias{PLOTt}
 \title{PLOTt, plot RNA-seq and ribo-seq separately.}
 \usage{
-PLOTt(YFG, RNAbam1 = RNAseqBam1, ribo1 = Ribo1, ylab1 = Ribolab1,
-  SAMPLE1 = S_NAME1, CDSonly = FALSE, Extend = 50, isoform,
-  uORF = NULL, NAME = "")
+PLOTt(
+  YFG,
+  RNAbam1 = RNAseqBam1,
+  ribo1 = Ribo1,
+  ylab1 = Ribolab1,
+  SAMPLE1 = S_NAME1,
+  CDSonly = FALSE,
+  Extend = 50,
+  isoform,
+  uORF = NULL,
+  NAME = "",
+  uORFisoform
+)
 }
 \arguments{
 \item{YFG}{Gene ID}
@@ -28,6 +38,8 @@ PLOTt(YFG, RNAbam1 = RNAseqBam1, ribo1 = Ribo1, ylab1 = Ribolab1,
 \item{uORF}{Gene ID for uORF}
 
 \item{NAME}{Name of the gene}
+
+\item{uORFisoform}{Isoform number of the uORF}
 }
 \value{
 One plot with RNA-seq and ribo-seq separately.

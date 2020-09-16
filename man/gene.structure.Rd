@@ -4,8 +4,7 @@
 \alias{gene.structure}
 \title{Output gene structure information.}
 \usage{
-gene.structure(annotation, format = "gtf", dataSource = "",
-  organism = "")
+gene.structure(annotation, format = "gtf", dataSource = "", organism = "")
 }
 \arguments{
 \item{annotation}{Path to the annotation file in either gtf or gff format.}

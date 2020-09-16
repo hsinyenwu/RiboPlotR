@@ -4,8 +4,15 @@
 \alias{p_site_plot_p2}
 \title{p_site_plot_p2 is for plotting uORFs}
 \usage{
-p_site_plot_p2(gene, uORF, uORF.isoform = 1, ribo, CDSonly = TRUE,
-  Extend = Extend, YLIM)
+p_site_plot_p2(
+  gene,
+  uORF,
+  uORF.isoform = NULL,
+  ribo,
+  CDSonly = TRUE,
+  Extend = Extend,
+  YLIM
+)
 }
 \arguments{
 \item{gene}{gene ID}

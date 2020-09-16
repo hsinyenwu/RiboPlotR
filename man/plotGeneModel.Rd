@@ -4,7 +4,13 @@
 \alias{plotGeneModel}
 \title{plot plotGeneModel}
 \usage{
-plotGeneModel(gene, uORF, Extend = Extend, p.isoform = isoform)
+plotGeneModel(
+  gene,
+  uORF,
+  Extend = Extend,
+  p.isoform = isoform,
+  uORF.isoform = NULL
+)
 }
 \arguments{
 \item{gene}{gene ID}
@@ -14,6 +20,8 @@ plotGeneModel(gene, uORF, Extend = Extend, p.isoform = isoform)
 \item{Extend}{number of nucleotides to extend on both side of the gene model}
 
 \item{p.isoform}{isoform that is been plotting at the PLOTc, PLOTt,PLOTc2 or PLOTt2 function}
+
+\item{uORF.isoform}{uORF isoform number}
 }
 \value{
 plot the gene model

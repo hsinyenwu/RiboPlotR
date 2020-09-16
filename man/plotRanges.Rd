@@ -4,9 +4,17 @@
 \alias{plotRanges}
 \title{plotRanges is a function to plot GRanges}
 \usage{
-plotRanges(isoform, uORF = NULL, shortest3UTR, ybottom,
-  main = deparse(substitute(x)), colCDS = "black", col3 = "white",
-  col5 = "lightgrey")
+plotRanges(
+  isoform,
+  uORF = NULL,
+  shortest3UTR,
+  ybottom,
+  main = deparse(substitute(x)),
+  colCDS = "black",
+  col3 = "white",
+  col5 = "lightgrey",
+  uORF.isoform = NULL
+)
 }
 \arguments{
 \item{isoform}{Integer, the number of isoform}
@@ -24,6 +32,8 @@ plotRanges(isoform, uORF = NULL, shortest3UTR, ybottom,
 \item{col3}{Color for 3'UTR}
 
 \item{col5}{Color for 5'UTR}
+
+\item{uORF.isoform}{uORF isoform number}
 }
 \value{
 plot each isoform

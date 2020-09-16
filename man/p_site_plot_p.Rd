@@ -4,8 +4,15 @@
 \alias{p_site_plot_p}
 \title{p_site_plot_p function to plot periodicity according to transcript info}
 \usage{
-p_site_plot_p(GeneName, isoform, ribo, CDSonly = FALSE,
-  Extend = Extend, YLIM, axesQ)
+p_site_plot_p(
+  GeneName,
+  isoform,
+  ribo,
+  CDSonly = FALSE,
+  Extend = Extend,
+  YLIM,
+  axesQ
+)
 }
 \arguments{
 \item{GeneName}{Name of gene used}

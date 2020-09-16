@@ -4,10 +4,21 @@
 \alias{PLOTc2}
 \title{PLOTc2}
 \usage{
-PLOTc2(YFG, RNAbam1 = RNAseqBam1, RNAbam2 = RNAseqBam2,
-  ribo1 = Ribo1, ribo2 = Ribo2, SAMPLE1 = S_NAME1,
-  SAMPLE2 = S_NAME2, CDSonly = FALSE, Extend = 50, isoform,
-  uORF = NULL, NAME = "")
+PLOTc2(
+  YFG,
+  RNAbam1 = RNAseqBam1,
+  RNAbam2 = RNAseqBam2,
+  ribo1 = Ribo1,
+  ribo2 = Ribo2,
+  SAMPLE1 = S_NAME1,
+  SAMPLE2 = S_NAME2,
+  CDSonly = FALSE,
+  Extend = 50,
+  isoform,
+  uORF = NULL,
+  NAME = "",
+  uORFisoform
+)
 }
 \arguments{
 \item{YFG}{Gene ID}
@@ -33,6 +44,8 @@ PLOTc2(YFG, RNAbam1 = RNAseqBam1, RNAbam2 = RNAseqBam2,
 \item{uORF}{Gene ID for uORF}
 
 \item{NAME}{Name of the gene}
+
+\item{uORFisoform}{Isoform number of the uORF}
 }
 \value{
 2 plots for RNAseq and Riboseq in 2 different genotypes/conditions.

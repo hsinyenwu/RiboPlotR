@@ -4,8 +4,7 @@
 \alias{uorf.structure}
 \title{Output gene structure information for uORFs.}
 \usage{
-uorf.structure(uorf_annotation, format = "gtf", dataSource = "",
-  organism = "")
+uorf.structure(uorf_annotation, format = "gtf", dataSource = "", organism = "")
 }
 \arguments{
 \item{uorf_annotation}{Path to the uORF annotation file in either gtf or gff format.}

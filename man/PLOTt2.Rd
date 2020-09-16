@@ -4,10 +4,23 @@
 \alias{PLOTt2}
 \title{PLOTt2, plot 2 sets of RNA-seq and ribo-seq for comparison}
 \usage{
-PLOTt2(YFG, RNAbam1 = RNAseqBam1, RNAbam2 = RNAseqBam2,
-  ribo1 = Ribo1, ribo2 = Ribo2, ylab1 = Ribolab1, ylab2 = Ribolab2,
-  SAMPLE1 = S_NAME1, SAMPLE2 = S_NAME2, CDSonly = FALSE,
-  Extend = 50, isoform, uORF = NULL, NAME = "")
+PLOTt2(
+  YFG,
+  RNAbam1 = RNAseqBam1,
+  RNAbam2 = RNAseqBam2,
+  ribo1 = Ribo1,
+  ribo2 = Ribo2,
+  ylab1 = Ribolab1,
+  ylab2 = Ribolab2,
+  SAMPLE1 = S_NAME1,
+  SAMPLE2 = S_NAME2,
+  CDSonly = FALSE,
+  Extend = 50,
+  isoform,
+  uORF = NULL,
+  NAME = "",
+  uORFisoform
+)
 }
 \arguments{
 \item{YFG}{Gene ID}
@@ -37,6 +50,8 @@ PLOTt2(YFG, RNAbam1 = RNAseqBam1, RNAbam2 = RNAseqBam2,
 \item{uORF}{Gene ID for uORF}
 
 \item{NAME}{Name of the gene}
+
+\item{uORFisoform}{Isoform number of the uORF}
 }
 \value{
 2 plots for RNAseq and Riboseq in 2 different conditions.
