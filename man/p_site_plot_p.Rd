@@ -11,7 +11,8 @@ p_site_plot_p(
   CDSonly = FALSE,
   Extend = Extend,
   YLIM,
-  axesQ
+  axesQ,
+  Grey = FALSE
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ p_site_plot_p(
 \item{YLIM}{Integer, max value of Y-axis}
 
 \item{axesQ}{PLOTc or PLOT, determine if the axes will be plotted}
+
+\item{Grey, }{Logical, darkgrey or not for Ribo/Degradome/CAGE reads}
 }
 \value{
 a plot for the Ribo-seq reads with periodicity

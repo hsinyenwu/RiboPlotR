@@ -11,7 +11,8 @@ p_site_plot_p2(
   ribo,
   CDSonly = TRUE,
   Extend = Extend,
-  YLIM
+  YLIM,
+  Grey = FALSE
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ p_site_plot_p2(
 \item{Extend}{Integer, plot more at both ends}
 
 \item{YLIM}{Integer, max value of Y-axis}
+
+\item{Grey}{Logical, darkgrey or not for Ribo/Degradome/CAGE reads}
 }
 \value{
 a plot for the Ribo-seq reads with periodicity
