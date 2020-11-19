@@ -368,10 +368,10 @@ p_site_plot_p <- function(GeneName,isoform,ribo,CDSonly=FALSE,Extend=Extend,YLIM
     }
     #Extract riboseq reads in the region of the transcript
     if (CDSonly==TRUE) {
-      RiboRslt <- ribo[ribo[,2]==chr & ribo[,3] > cdsLeft & ribo[,3] < cdsRight & ribo$strand==txStrand,]
+      RiboRslt <- ribo[ribo[,2]==chr & ribo[,3] >= cdsLeft & ribo[,3] <= cdsRight & ribo$strand==txStrand,]
     }
     else if(CDSonly==FALSE) {
-      RiboRslt <- ribo[ribo[,2]==chr & ribo[,3] > txLeft-Extend & ribo[,3] < txRight+Extend & ribo$strand==txStrand,]
+      RiboRslt <- ribo[ribo[,2]==chr & ribo[,3] >= txLeft-Extend & ribo[,3] <= txRight+Extend & ribo$strand==txStrand,]
     }
     RiboRslt$frame <- factor(ifelse(RiboRslt$position%in%s1,0,ifelse(RiboRslt$position%in%s2,1,ifelse(RiboRslt$position%in%s3,2,3))),levels=c(0,1,2,3))
     if(axesQ=="PLOTc"){
@@ -465,7 +465,7 @@ p_site_plot_p2 <- function(gene,uORF,uORF.isoform=NULL,ribo,CDSonly=TRUE,Extend=
       s3 = sposition[which(sseq%%3==0)]
     }
     #Extract riboseq reads in the region of the transcript
-    RiboRslt <- ribo[ribo[,2]==chr & ribo[,3] > cdsLeft & ribo[,3] < cdsRight & ribo$strand==txStrand,]
+    RiboRslt <- ribo[ribo[,2]==chr & ribo[,3] >= cdsLeft & ribo[,3] <= cdsRight & ribo$strand==txStrand,]
     RiboRslt$frame <- factor(ifelse(RiboRslt$position%in%s1,0,ifelse(RiboRslt$position%in%s2,1,ifelse(RiboRslt$position%in%s3,2,3))),levels=c(0,1,2,3))
     ###@@@@
     generanges <- ranges(unlist(exonsByGene[gene]))
@@ -1204,5 +1204,65 @@ PLOTch3 <-function(YFG,RNAbam1=RNAseqBam1,ribo1=Ribo1,Deg=DEGdata,CAGE=CAGEdata,
   #Plot gene model
   plotGeneModel(YFG,Extend=Extend,uORF=uORF,p.isoform=isoform,uORF.isoform=uORFisoform)
   mtext(paste(YFG,"  ",NAME),side=3,line=0.4, cex=1.2, col="black", outer=TRUE,font=3)
+}
+
+# count_CDS_reads function to count reads according to CDS info
+#' @title count_CDS_reads function to count reads according to CDS info
+#' @description count Ribo-seq reads according to the CDS range
+#' @param GeneName Name of gene used
+#' @param isoform Which isoforms used
+#' @param ribo riboseq file
+#' @return a dataframe of the Ribo-seq counts in chromosome positions
+#' @export
+
+count_CDS_reads <- function(GeneName,isoform,ribo) {
+  if(paste0(GeneName,".",isoform,sep = "") %in% names(cdsByTx)) {
+    CDS <- cds[paste(GeneName,".",isoform,sep = ""),]
+    #Extract chromosome number from CDS object
+    chr=as.character(seqnames(unlist(CDS)))[1]
+    #Extract strand information from CDS object
+    txStrand=as.character(strand(unlist(CDS)))[1]
+    #Extract most left position from the CDS object
+    cdsLeft=min(start(ranges(unlist(CDS))))
+    #Extract most right position from the CDS object
+    cdsRight=max(end(ranges(unlist(CDS))))
+    RiboRslt <- ribo[ribo[,2]==chr & ribo[,3] >= cdsLeft & ribo[,3] <= cdsRight & ribo$strand==txStrand,]
+    RiboRslt
+  }
+  else {
+    stop("Input transcript is not a coding gene in gtf/gff file.")
+  }
+}
+
+# count_uORF_CDS_reads function to count reads according to CDS info
+#' @title count_uORF_CDS_reads function to count reads according to CDS info
+#' @description count_uORF_CDS_reads count ribo-seq reads in the CDS of a given uORF
+#' @param gene gene ID
+#' @param uORF uORF ID
+#' @param uORF.isoform numberic, uORF isoform, default use 1 
+#' @param ribo riboseq file 
+#' @return a dataframe of the Ribo-seq counts in chromosome positions
+#' @export
+
+count_uORF_CDS_reads <- function(gene,uORF,uORF.isoform=NULL,ribo) {
+  #CDSonly=T, then only plot the reads in the CDS
+  if(missing(uORF.isoform)) {uORF.isoform <- "1"}
+  if(paste0(uORF,".",uORF.isoform,sep = "") %in% names(cdsByTx_u)) {
+    CDS <- cds_u[paste(uORF,".",uORF.isoform,sep = ""),]
+    #Extract chromosome number from CDS object
+    chr=as.character(seqnames(unlist(CDS)))[1]
+    #Extract strand information from CDS object
+    txStrand=as.character(strand(unlist(CDS)))[1]
+    #Extract most left position from the CDS object
+    cdsLeft=min(start(ranges(unlist(CDS))))
+    #Extract most right position from the CDS object
+    cdsRight=max(end(ranges(unlist(CDS))))
+    #Extract riboseq reads in the region of the transcript
+    RiboRslt <- ribo[ribo[,2]==chr & ribo[,3] >= cdsLeft & ribo[,3] <= cdsRight & ribo$strand==txStrand,]
+    RiboRslt
+  }
+  else {
+    stop("Input transcript is not a coding gene in gtf/gff file.")
+  }
 }
 

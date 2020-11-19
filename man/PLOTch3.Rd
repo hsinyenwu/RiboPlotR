@@ -46,7 +46,7 @@ PLOTch3(
 \item{GREY}{grey color or three colors for Ribo/Degradome/CAGE}
 }
 \value{
-3 plots for (1) RNAseq and Riboseq (in 2 different genotypes/conditions. (2) (3) CAGE
+3 plots for (1) RNAseq and Riboseq (in 2 different genotypes/conditions. (2) Degradome (3) CAGE
 }
 \description{
 plot 2 sets of RNA-seq and ribo-seq for comparison. It also contains a plot with transcript models.
