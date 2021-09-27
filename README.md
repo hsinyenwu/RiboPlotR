@@ -40,7 +40,7 @@ install_github("hsinyenwu/RiboPlotR")
 ### Files required for RiboPlotR:
 
 RiboPlotR requires the following input files: 
-1. A gtf or gff3 file for transcriptome annotation, which should be recognizable with the GenomicFeatures package
+1. A gtf or gff3 file for transcriptome annotation, which should be recognizable with the GenomicFeatures package and the transcript name should be composed of a gene name, a period and a number (a widely used format for plant genome annotations). In other words, the current version of RiboPlotR does not work when using animal gtf/gff3.
 2. A mapped and coordinate-sorted bam file(s) for RNA-seq
 3. A tab-delimited file(s) for Ribo-seq P-site coordinates (see below)
 4. A gtf or gff3 file for uORF coordinates is optional. 
