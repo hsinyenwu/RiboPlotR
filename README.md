@@ -138,8 +138,8 @@ PLOTt("AT3G02470",uORF = "AT3G02468",NAME=" SAMDC",isoform=3)
 
 ### Citation:
 More information: 
-Visualizing the periodic Ribo-seq reads with RiboPlotR  
-https://www.biorxiv.org/content/10.1101/694646v1   
+RiboPlotR: a visualization tool for periodic Ribo-seq reads 
+https://link.springer.com/article/10.1186/s13007-021-00824-4
 
 ### Session Info:
 ```R
