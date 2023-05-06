@@ -167,15 +167,7 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(s
     Frame <- ifelse(as.character(runValue(strand(exonsByTx[isoform])))=="+", firstInFramePSitePerExonPositive(isoform), firstInFramePSitePerExonNegative(isoform))
     # plot
     rect(start(xlimCds), ybottom, end(xlimCds), ybottom + height, col =c("black","black","black")[Frame] , border = "black")
-    if (!is.null(uORF)) {
-      if(missing(uORF.isoform)) {uORF.isoform <- "1"}
-      #The next if check if the isoform contains the range of the uORF, if not, do not plot the uORF in the gene model.
-      if(sum(width(GenomicRanges::setdiff(unlist(cdsByTx_u[paste0(uORF,".",uORF.isoform)]),unlist(exonsByTx[isoform]))))==0) {
-        uORF=paste0(uORF,".",uORF.isoform)
-        xlim_uORF=ranges(unlist(cdsByTx_u[uORF]))
-        rect(start(xlim_uORF), ybottom, end(xlim_uORF), ybottom + height, col ="yellow" , border = "black")
-      }
-    }
+    
     # Plot 3'UTR with an arrow shap
     if (isoform %in% names(threeUTR)) {
       xlim3=ranges(sort(unlist(threeUTR[isoform])))
@@ -205,13 +197,22 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(s
         }
       }
     }
+    #Plot uORF range
+    if (!is.null(uORF)) {
+      if(missing(uORF.isoform)) {uORF.isoform <- "1"}
+      #The next if check if the isoform contains the range of the uORF, if not, do not plot the uORF in the gene model.
+      if(sum(width(GenomicRanges::setdiff(unlist(cdsByTx_u[paste0(uORF,".",uORF.isoform)]),unlist(exonsByTx[isoform]))))==0) {
+        uORF=paste0(uORF,".",uORF.isoform)
+        xlim_uORF=ranges(unlist(cdsByTx_u[uORF]))
+        rect(start(xlim_uORF), ybottom, end(xlim_uORF), ybottom + height, col ="yellow" , border = "black")
+      }
+    }
     axis(1)
   }
   else {
     stop("Input transcript is not a coding gene in gtf/gff file.")
   }
 }
-
 
 #plotGeneModel combines both plotRanges and p_site_plot_all functions
 #' @title plot plotGeneModel
