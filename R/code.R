@@ -196,12 +196,10 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(s
           polygon(x=c(start(xlim3[1]),start(xlim3[1])+z,end(xlim3[1]),end(xlim3[1]),start(xlim3[1])+z),y=c(ybottom+height/2,ybottom+height,ybottom+height,ybottom,ybottom), col = col3, border = "black")
         }
       }
+
     }
-    axis(1)
-  }
-  
-  #Plot uORF range
-    if (!is.null(uORF)) {
+    #Plot uORF range
+    else if (!is.null(uORF)) {
       if(missing(uORF.isoform)) {uORF.isoform <- "1"}
       #The next if check if the isoform contains the range of the uORF, if not, do not plot the uORF in the gene model.
       if(sum(width(GenomicRanges::setdiff(unlist(cdsByTx_u[paste0(uORF,".",uORF.isoform)]),unlist(exonsByTx[isoform]))))==0) {
@@ -210,6 +208,9 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(s
         rect(start(xlim_uORF), ybottom, end(xlim_uORF), ybottom + height, col ="yellow" , border = "black")
       }
     }
+    axis(1)
+  }
+  
   else {
     stop("Input transcript is not a coding gene in gtf/gff file.")
   }
