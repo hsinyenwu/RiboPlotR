@@ -137,6 +137,7 @@ rna_bam.ribo <- function(Ribo1,Ribo2=NULL,RNAseqBam1,RNAseqBam2=NULL,RNAlab1="RN
 #' @param col5 Color for 5'UTR
 #' @param uORF.isoform uORF isoform number
 #' @return plot each isoform
+#' @export
 
 plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(substitute(x)),colCDS = "black",col3="white",col5="lightgrey",uORF.isoform=NULL) {
   if(isoform %in% names(cdsByTx)) {
