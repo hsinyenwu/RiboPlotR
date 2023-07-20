@@ -200,7 +200,7 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(s
 
     }
     #Plot uORF range
-    else if (!is.null(uORF)) {
+    if (!is.null(uORF)) {
       if(missing(uORF.isoform)) {uORF.isoform <- "1"}
       #The next if check if the isoform contains the range of the uORF, if not, do not plot the uORF in the gene model.
       if(sum(width(GenomicRanges::setdiff(unlist(cdsByTx_u[paste0(uORF,".",uORF.isoform)]),unlist(exonsByTx[isoform]))))==0) {
