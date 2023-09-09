@@ -225,6 +225,7 @@ plotRanges <- function(isoform,uORF=NULL,shortest3UTR, ybottom, main = deparse(s
 #' @param Extend number of nucleotides to extend on both side of the gene model
 #' @param p.isoform isoform that is been plotting at the PLOTc, PLOTt,PLOTc2 or PLOTt2 function
 #' @param uORF.isoform uORF isoform number
+#' @export
 #' @return plot the gene model
 
 plotGeneModel <- function(gene,uORF,Extend=Extend,p.isoform=isoform,uORF.isoform=NULL){
@@ -248,9 +249,9 @@ plotGeneModel <- function(gene,uORF,Extend=Extend,p.isoform=isoform,uORF.isoform
       shortest3UTR <- min(sapply(isoforms.w.3UTR, function(j) width(tail(unlist(threeUTR[j]),1))))
       plotRanges(isoform=i,uORF,shortest3UTR,ybottom=(yAxis-0.28*k2),uORF.isoform=uORF.isoform) #removed
       if (p.isoform==k){
-        text(x=min(start(generanges))-Extend-0.5, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.4,font=2)
+        #text(x=min(start(generanges))-Extend-0.5, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.4,font=2)
       } else {
-        text(x=min(start(generanges))-Extend-0.5, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.2)
+        #text(x=min(start(generanges))-Extend-0.5, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.2)
       }
     }
     else {
