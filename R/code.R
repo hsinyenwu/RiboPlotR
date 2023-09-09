@@ -256,9 +256,9 @@ plotGeneModel <- function(gene,uORF,Extend=Extend,p.isoform=isoform,uORF.isoform
     else {
       plotRanges(isoform=i,uORF,ybottom=(yAxis-0.28*k2),uORF.isoform=uORF.isoform)
       if (p.isoform==k){
-        text(x=min(start(generanges))-Extend-0.5, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.4,font=2)
+        #text(x=min(start(generanges))-Extend-0.5, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.4,font=2)
       } else {
-        text(x=min(start(generanges))-Extend-0.5, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.2)
+        #text(x=min(start(generanges))-Extend-0.5, y=(yAxis-0.28*k2+0.05), labels=tx_num[k2],cex=1.2)
       }
     }
   }
