@@ -1,4 +1,7 @@
 # RiboPlotR for visualizing the periodicity of Ribo-seq reads.
+
+### Please check out ***[ggRibo](https://github.com/hsinyenwu/ggRibo)*** as our second generation of Ribo-seq plotting tool.
+
 ### Introduction
 
 RiboPlotR is a R package for for visualizing RNA-seq/Ribo-seq reads in the context of a given gene, including Ribo-seq reads mapped to the annotated coding sequences (CDSs), 5' and 3' untranslated regions (UTRs), and introns, with all annotated transcript isoform models displayed in parallel in the plot. There are several advantages to the style used in RiboPlotR: (1) We can detect novel translation events in the unannotated coding regions, such as those in the UTRs and introns. (2) By including all transcript isoform models in the plot, in most cases, we can visually determine which transcript isoform(s) is/are translated. (3) By comparing sequencing data and annotated gene models in parallel, we can identify discrepancies between the Ribo-seq data and the predicted CDSs, such as frameshifts and variations in coding regions; similarly, any deviations in the mRNA profile from the annotated transcript isoforms are also easily visualized. (4) The relative Ribo-seq abundance in different transcript features, such as upstream ORFs (uORFs) and introns, can be visualized and thus used to infer potential regulatory mechanisms and generate new hypotheses. Below, we describe uses for and examples with RiboPlotR to visualize translation events in a gene with a predicted uORF and in another gene with different transcript isoforms.
