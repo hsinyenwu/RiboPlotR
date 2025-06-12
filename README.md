@@ -1,6 +1,6 @@
 # RiboPlotR for visualizing the periodicity of Ribo-seq reads.
 
-### Please check out ***[ggRibo](https://github.com/hsinyenwu/ggRibo)*** as our second generation of Ribo-seq plotting tool.
+### Latest News: please check out ***[ggRibo](https://github.com/hsinyenwu/ggRibo)*** as our second generation of Ribo-seq plotting tool.
 
 ### Introduction
 
